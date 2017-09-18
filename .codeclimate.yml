@@ -3,7 +3,6 @@ languages:
   Ruby: false
   Python: false
   PHP: false
-engines:
-  enabled: true
+  
 exclude_paths:
 - "lib/index.js"
