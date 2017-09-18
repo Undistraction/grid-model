@@ -10,6 +10,18 @@ The project is built using rollup using the config file `rollup.config.js`. It i
 yarn run build
 ```
 
+## Release
+
+Bump the version (patch, minor, major, prepatch, preminor, premajor, prerelease:)
+```
+npm version patch -m "Bump version to  %s"
+```
+
+Publish to NPM:
+```
+npm publish
+```
+
 ## Params
 
 The grid supports as many combinations of parameters as possible, calculating the missing params from those that were supplies. In the event conflicting params are supplied it will drop the most sensible param and use the others.
