@@ -1,0 +1,4 @@
+- spanCells(startX, startY, endX, endY)
+- row(x);
+- column(y)
+- 
