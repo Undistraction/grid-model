@@ -1,0 +1,21 @@
+{
+  "ignore": ["node_modules/**"], // Ignore third party code
+  "env": {
+    // Setup for tests
+    "test": {
+      "presets": ["env"]
+    },
+    // Setup for build
+    "development": {
+      "presets": [
+        [
+          "env",
+          {
+            modules: false
+          }
+        ]
+      ],
+      "plugins": ["external-helpers"]
+    }
+  }
+}
