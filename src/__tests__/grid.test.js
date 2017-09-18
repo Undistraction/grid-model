@@ -58,7 +58,7 @@ describe('grid', () => {
         });
         expect(instance.width).toEqual(100);
         expect(instance.aspectRatio).toEqual(0.5);
-        const dimensions = instance.dimensions;
+        const { dimensions } = instance;
         expect(dimensions.width).toEqual(100);
         expect(dimensions.aspectRatio).toEqual(0.5);
       });
@@ -71,7 +71,7 @@ describe('grid', () => {
           rows: 8,
         });
         expect(instance.height).toEqual(200);
-        const dimensions = instance.dimensions;
+        const { dimensions } = instance;
         expect(dimensions.height).toEqual(200);
       });
     });
@@ -86,7 +86,7 @@ describe('grid', () => {
         });
         expect(instance.height).toEqual(100);
         expect(instance.aspectRatio).toEqual(0.5);
-        const dimensions = instance.dimensions;
+        const { dimensions } = instance;
         expect(dimensions.height).toEqual(100);
         expect(dimensions.aspectRatio).toEqual(0.5);
       });
@@ -99,7 +99,7 @@ describe('grid', () => {
           rows: 8,
         });
         expect(instance.width).toEqual(50);
-        const dimensions = instance.dimensions;
+        const { dimensions } = instance;
         expect(dimensions.width).toEqual(50);
       });
     });
@@ -110,7 +110,7 @@ describe('grid', () => {
       const instance = grid({ width: 100, height: 400, columns: 20, rows: 30 });
       expect(instance.columns).toEqual(20);
       expect(instance.rows).toEqual(30);
-      const gridDimensions = instance.gridDimensions;
+      const { gridDimensions } = instance;
       expect(gridDimensions.width).toEqual(20);
       expect(gridDimensions.height).toEqual(30);
     });
@@ -126,7 +126,7 @@ describe('grid', () => {
       });
       expect(instance.cellWidth).toEqual(20);
       expect(instance.cellHeight).toEqual(30);
-      const cellDimensions = instance.cellDimensions;
+      const { cellDimensions } = instance;
       expect(cellDimensions.width).toEqual(20);
       expect(cellDimensions.height).toEqual(30);
     });
@@ -319,11 +319,11 @@ describe('grid', () => {
           });
 
           const cell = instance.cellAt(5, 12);
-          const point = cell.point;
-          const dimensions = cell.dimensions;
+          const { point } = cell;
+          // const { dimensions } = cell;
 
-          expect(cell.point.x).toBeCloseTo(42.083333, 4);
-          expect(cell.point.y).toBeCloseTo(277.84615, 4);
+          expect(point.x).toBeCloseTo(42.083333, 4);
+          expect(point.y).toBeCloseTo(277.84615, 4);
         });
       });
     });

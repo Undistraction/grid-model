@@ -7,8 +7,8 @@ const iterator = grid => {
 
   let x = 0;
   let y = 0;
-  const columns = grid.columns;
-  const rows = grid.rows;
+  const { columns } = grid;
+  const { rows } = grid;
 
   const next = () => {
     const thisX = x;
@@ -18,9 +18,9 @@ const iterator = grid => {
 
     if (x + 1 === columns) {
       x = 0;
-      y++;
+      y += 1;
     } else {
-      x++;
+      x += 1;
     }
     return {
       x: thisX,

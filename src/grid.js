@@ -1,7 +1,7 @@
+import { isNumber } from 'lodash';
 import dimensions from './dimensions';
 import cell from './cell';
 import point from './point';
-import { isNumber } from './validations';
 
 export const CANT_DERIVE_CELL_DIMENSIONS_MESSAGE =
   "Grid Couldn't calculate cell dimensions from supplied arguments";
@@ -56,11 +56,12 @@ const grid = (
   /**
    * 
    * @param {*} params Array of params to check
+   * @returns {array} of params that have been set
    * 
    * Filter out any params that haven't been set. 
    */
   const validParamCount = params => {
-    return params.filter(function(x) {
+    return params.filter(x => {
       return x !== undefined && x !== null && x !== '';
     }).length;
   };
@@ -128,6 +129,8 @@ const grid = (
    * If this information hasn't been explicly supplied, try to derive that info
    * from the other parameters supplied. If there is no way to assertain the
    * dimensions, throw an Error.
+   * 
+   * @returns {object} dimensions
    */
   const saveDimensions = () => {
     // If we only have width, we will need rowCount + cellHeight
@@ -224,7 +227,6 @@ const grid = (
       columns * cellWidth > getDimensions().width ||
       rows * cellHeight > getDimensions().height
     ) {
-      console.log(rows, cellHeight, getDimensions().height);
       throw new Error(INVALID_PARAMS_MESSAGE);
     }
   }
@@ -241,7 +243,7 @@ const grid = (
   const cellCount = () => getGridDimensions().area();
 
   const cellAt = (x, y) => {
-    if (isNaN(x) || isNaN(y)) {
+    if (!isNumber(x) || !isNumber(y)) {
       throw new Error(INVALID_PARAMS_TO_CELL_AT_MESSAGE);
     }
 

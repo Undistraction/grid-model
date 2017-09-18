@@ -1,6 +1,6 @@
 module.exports = {
-  extends: ['airbnb', 'plugin:react/recommended', 'prettier'],
-  plugins: ['react', 'prettier'],
+  extends: ['eslint-config-airbnb-base', 'prettier'],
+  plugins: ['prettier'],
   env: {
     browser: true,
     jest: true,

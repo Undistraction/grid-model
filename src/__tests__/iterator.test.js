@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import iterator, { MISSING_GRID_MESSAGE } from '../iterator';
 import grid from '../grid';
-import _ from 'lodash';
 
 const times = x => f => {
   if (x > 0) {
@@ -25,7 +25,6 @@ describe('iterator', () => {
         rows: 12,
       });
       const instance = iterator(gridInstance);
-      let c = 0;
       // 120 cells
       _.times(120, () => {
         expect(instance.next().done).toBeFalsy();

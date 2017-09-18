@@ -1,7 +1,9 @@
+import { isNumber } from 'lodash';
+
 export const INVALID_PARAMS_MESSAGE = 'Params were invalid';
 
 const point = (x, y) => {
-  if (isNaN(x) || isNaN(y)) {
+  if (!isNumber(x) || !isNumber(y)) {
     throw new Error(INVALID_PARAMS_MESSAGE);
   }
 

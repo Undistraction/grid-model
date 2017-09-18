@@ -1,8 +1,6 @@
-import {
-  isNumber,
-  isNumberOrPercentString,
-  isPositiveNumber,
-} from './validations';
+import { isNumber } from 'lodash';
+
+import { isNumberOrPercentString, isPositiveNumber } from './validations';
 
 export const INVALID_DIMENSION_MESSAGE =
   'You must supply at least two arguments of: [width, height, aspectRatio]';
@@ -24,7 +22,7 @@ const dimensions = ({ width, height, aspectRatio }) => {
     throwInvalidParamError('aspectRatio', aspectRatio);
 
   // Create array of params that have been supplied
-  const validParams = [width, height, aspectRatio].filter(function(x) {
+  const validParams = [width, height, aspectRatio].filter(x => {
     return x !== undefined && x !== null && x !== '';
   });
 
