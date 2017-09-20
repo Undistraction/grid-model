@@ -242,7 +242,7 @@ const createGrid = (
 
   const cellCount = () => getGridDimensions().area();
 
-  const cellAt = (x, y) => {
+  const regionForCellAt = (x, y) => {
     if (!isNumber(x) || !isNumber(y)) {
       throw new Error(INVALID_PARAMS_TO_CELL_AT_MESSAGE);
     }
@@ -296,7 +296,7 @@ const createGrid = (
       return _gutterDimensions.height;
     },
     cellCount,
-    cellAt,
+    regionForCellAt,
   };
 };
 

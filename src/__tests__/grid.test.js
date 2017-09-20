@@ -277,6 +277,10 @@ describe('grid', () => {
     });
   });
 
+  // ---------------------------------------------------------------------------
+  // API
+  // ---------------------------------------------------------------------------
+
   describe('api', () => {
     describe('cellCount', () => {
       it('returns the correct number of cells', () => {
@@ -291,7 +295,7 @@ describe('grid', () => {
       });
     });
 
-    describe('cellAt', () => {
+    describe('regionForCellAt', () => {
       describe('with invalid params', () => {
         it('throws an error', () => {
           const instance = createGrid({
@@ -300,19 +304,19 @@ describe('grid', () => {
             columns: 12,
             rows: 13,
           });
-          expect(() => instance.cellAt()).toThrowError(
+          expect(() => instance.regionForCellAt()).toThrowError(
             INVALID_PARAMS_TO_CELL_AT_MESSAGE
           );
 
-          expect(() => instance.cellAt(11)).toThrowError(
+          expect(() => instance.regionForCellAt(11)).toThrowError(
             INVALID_PARAMS_TO_CELL_AT_MESSAGE
           );
 
-          expect(() => instance.cellAt('sss', 33)).toThrowError(
+          expect(() => instance.regionForCellAt('sss', 33)).toThrowError(
             INVALID_PARAMS_TO_CELL_AT_MESSAGE
           );
 
-          expect(() => instance.cellAt(33, 'sss')).toThrowError(
+          expect(() => instance.regionForCellAt(33, 'sss')).toThrowError(
             INVALID_PARAMS_TO_CELL_AT_MESSAGE
           );
         });
@@ -326,7 +330,7 @@ describe('grid', () => {
               height: 300,
               columns: 12,
               rows: 13,
-            }).cellAt(3, 15)
+            }).regionForCellAt(3, 15)
           ).toThrowError(INVALID_CELL_INDEX_MESSAGE);
         });
       });
@@ -339,7 +343,7 @@ describe('grid', () => {
               height: 300,
               columns: 12,
               rows: 13,
-            }).cellAt(22, 5)
+            }).regionForCellAt(22, 5)
           ).toThrowError(INVALID_CELL_INDEX_MESSAGE);
         });
       });
@@ -354,7 +358,7 @@ describe('grid', () => {
             gutter: 1,
           });
 
-          const cell = instance.cellAt(5, 12);
+          const cell = instance.regionForCellAt(5, 12);
           const { topLeftPoint } = cell;
           const { dimensions } = cell;
 
@@ -364,6 +368,12 @@ describe('grid', () => {
           expect(dimensions.height).toBeCloseTo(22.15384, 4);
         });
       });
+
+      describe('regionForCells', () => {});
+
+      describe('regionForRows', () => {});
+
+      describe('regionForColumns', () => {});
     });
   });
 });
