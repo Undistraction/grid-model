@@ -11,6 +11,16 @@ const throwInvalidParamError = (param, value) => {
 };
 
 const createDimensions = ({ width, height, aspectRatio }) => {
+  // We need at least two params
+  const validParams = [width, height, aspectRatio].filter(x => {
+    return x !== undefined && x !== null && x !== '';
+  });
+
+  // Validate we have the params we need
+  if (validParams.length < 2) {
+    throw new Error(INVALID_PARAMS_MESSAGE);
+  }
+
   // Validate supplied params are valid
   if (width && !isNumberOrPercentString(width))
     throwInvalidParamError('width', width);
@@ -20,16 +30,6 @@ const createDimensions = ({ width, height, aspectRatio }) => {
 
   if (aspectRatio && !isPositiveNumber(aspectRatio))
     throwInvalidParamError('aspectRatio', aspectRatio);
-
-  // Create array of params that have been supplied
-  const validParams = [width, height, aspectRatio].filter(x => {
-    return x !== undefined && x !== null && x !== '';
-  });
-
-  // Validate we have the params we need
-  if (validParams.length < 2) {
-    throw new Error(INVALID_PARAMS_MESSAGE);
-  }
 
   const _width = isNumber(width) ? width : height * aspectRatio;
   const _height = isNumber(height) ? height : width / aspectRatio;
