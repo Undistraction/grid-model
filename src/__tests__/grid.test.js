@@ -309,7 +309,7 @@ describe('grid', () => {
       });
 
       describe('with valid indexes', () => {
-        it('returns the right cell', () => {
+        it('returns a cell at the correct position and with the correct dimensions', () => {
           const instance = grid({
             width: 100,
             height: 300,
@@ -319,11 +319,13 @@ describe('grid', () => {
           });
 
           const cell = instance.cellAt(5, 12);
-          const { point } = cell;
-          // const { dimensions } = cell;
+          const { topLeftPoint } = cell;
+          const { dimensions } = cell;
 
-          expect(point.x).toBeCloseTo(42.083333, 4);
-          expect(point.y).toBeCloseTo(277.84615, 4);
+          expect(topLeftPoint.x).toBeCloseTo(42.083333, 4);
+          expect(topLeftPoint.y).toBeCloseTo(277.84615, 4);
+          expect(dimensions.width).toBeCloseTo(7.41666, 4);
+          expect(dimensions.height).toBeCloseTo(22.15384, 4);
         });
       });
     });

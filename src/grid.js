@@ -42,7 +42,7 @@ const grid = (
   let _cellDimensions;
   let _gutterDimensions;
 
-  const pointForCell = (x, y) => {
+  const topLeftPointForCell = (x, y) => {
     const xPos = (getCellDimensions().width + getGutterDimensions().width) * x;
     const yPos =
       (getCellDimensions().height + getGutterDimensions().height) * y;
@@ -251,9 +251,9 @@ const grid = (
       throw new Error(INVALID_CELL_INDEX_MESSAGE);
     }
 
-    const cellPoint = pointForCell(x, y);
+    const cellTopLeftPoint = topLeftPointForCell(x, y);
     const cellDimensions = dimensionsForCell(x, y);
-    return cell(cellPoint, cellDimensions);
+    return cell(cellTopLeftPoint, cellDimensions);
   };
 
   // ---------------------------------------------------------------------------
