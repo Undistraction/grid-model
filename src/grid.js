@@ -1,6 +1,6 @@
 import { isNumber } from 'lodash';
 import createDimensions from './dimensions';
-import createCell from './cell';
+import createRegion from './region';
 import createPoint from './point';
 
 export const CANT_DERIVE_CELL_DIMENSIONS_MESSAGE =
@@ -251,7 +251,7 @@ const createGrid = (
       throw new Error(INVALID_CELL_INDEX_MESSAGE);
     }
 
-    return createCell(topLeftPointForCell(x, y), dimensionsForCell(x, y));
+    return createRegion(topLeftPointForCell(x, y), dimensionsForCell(x, y));
   };
 
   // ---------------------------------------------------------------------------

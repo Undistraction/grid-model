@@ -3,7 +3,7 @@ import createPoint from './point';
 export const INVALID_PARAMS_ERROR_MESSAGE =
   'You must supply a point object and size object';
 
-const cell = (origin, dimensions) => {
+const region = (origin, dimensions) => {
   if (!origin || !dimensions) {
     throw new Error(INVALID_PARAMS_ERROR_MESSAGE);
   }
@@ -42,4 +42,4 @@ const cell = (origin, dimensions) => {
   };
 };
 
-export default cell;
+export default region;

@@ -1,12 +1,12 @@
-import createCell, { INVALID_PARAMS_ERROR_MESSAGE } from '../cell';
+import createRegion, { INVALID_PARAMS_ERROR_MESSAGE } from '../region';
 import createPoint from '../point';
 import createDimensions from '../dimensions';
 
-describe('cell', () => {
+describe('region', () => {
   describe('when initialised with missing arguments', () => {
     it('should throw an error', () => {
-      expect(() => createCell()).toThrowError(INVALID_PARAMS_ERROR_MESSAGE);
-      expect(() => createCell(createPoint(10, 20))).toThrowError(
+      expect(() => createRegion()).toThrowError(INVALID_PARAMS_ERROR_MESSAGE);
+      expect(() => createRegion(createPoint(10, 20))).toThrowError(
         INVALID_PARAMS_ERROR_MESSAGE
       );
     });
@@ -19,7 +19,7 @@ describe('cell', () => {
       const topRightPoint = createPoint(40, 20);
       const bottomLeftPoint = createPoint(10, 60);
       const bottomRightPoint = createPoint(40, 60);
-      const instance = createCell(topLeftPoint, d);
+      const instance = createRegion(topLeftPoint, d);
       expect(instance.topLeftPoint).toEqual(topLeftPoint);
       expect(instance.topRightPoint).toEqual(topRightPoint);
       expect(instance.bottomLeftPoint).toEqual(bottomLeftPoint);
