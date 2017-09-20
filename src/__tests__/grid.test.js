@@ -1,4 +1,4 @@
-import grid, {
+import createGrid, {
   INVALID_PARAMS_MESSAGE,
   INVALID_PARAMS_TO_CELL_AT_MESSAGE,
   INVALID_CELL_INDEX_MESSAGE,
@@ -8,7 +8,7 @@ describe('grid', () => {
   describe('invalid params', () => {
     describe('with only valid dimensions', () => {
       it('throws an error', () => {
-        expect(() => grid({ width: 100, height: 200 })).toThrowError(
+        expect(() => createGrid({ width: 100, height: 200 })).toThrowError(
           INVALID_PARAMS_MESSAGE
         );
       });
@@ -17,7 +17,13 @@ describe('grid', () => {
     describe('with cellWidth that will exceed grid width at supplied columns', () => {
       it('throws an error', () => {
         expect(() =>
-          grid({ width: 100, height: 200, columns: 3, rows: 5, cellWidth: 40 })
+          createGrid({
+            width: 100,
+            height: 200,
+            columns: 3,
+            rows: 5,
+            cellWidth: 40,
+          })
         ).toThrowError(INVALID_PARAMS_MESSAGE);
       });
     });
@@ -25,7 +31,13 @@ describe('grid', () => {
     describe('with cellHeight that will exceed grid height at supplied columns', () => {
       it('throws an error', () => {
         expect(() =>
-          grid({ width: 100, height: 200, columns: 3, rows: 5, cellHeight: 50 })
+          createGrid({
+            width: 100,
+            height: 200,
+            columns: 3,
+            rows: 5,
+            cellHeight: 50,
+          })
         ).toThrowError(INVALID_PARAMS_MESSAGE);
       });
     });
@@ -34,7 +46,12 @@ describe('grid', () => {
   describe('dimensions', () => {
     describe('using width and height for dimensions', () => {
       it('calculates returns the correct width and height', () => {
-        const instance = grid({ width: 100, height: 200, columns: 5, rows: 8 });
+        const instance = createGrid({
+          width: 100,
+          height: 200,
+          columns: 5,
+          rows: 8,
+        });
         expect(instance.width).toEqual(100);
         expect(instance.height).toEqual(200);
         const dimensions = instance.dimensions;
@@ -43,14 +60,19 @@ describe('grid', () => {
       });
 
       it('calculates correct aspect ratio', () => {
-        const instance = grid({ width: 100, height: 200, columns: 5, rows: 8 });
+        const instance = createGrid({
+          width: 100,
+          height: 200,
+          columns: 5,
+          rows: 8,
+        });
         expect(instance.aspectRatio).toEqual(0.5); // 100 / 200
       });
     });
 
     describe('using width and aspaectRatio for dimensions', () => {
       it('returns the correct width and aspectRatio', () => {
-        const instance = grid({
+        const instance = createGrid({
           width: 100,
           aspectRatio: 0.5,
           columns: 5,
@@ -64,7 +86,7 @@ describe('grid', () => {
       });
 
       it('calculates correct height', () => {
-        const instance = grid({
+        const instance = createGrid({
           width: 100,
           aspectRatio: 0.5,
           columns: 5,
@@ -78,7 +100,7 @@ describe('grid', () => {
 
     describe('using height and aspaectRatio for dimensions', () => {
       it('returns the correct height and aspectRatio', () => {
-        const instance = grid({
+        const instance = createGrid({
           height: 100,
           aspectRatio: 0.5,
           columns: 5,
@@ -92,7 +114,7 @@ describe('grid', () => {
       });
 
       it('calculates correct width', () => {
-        const instance = grid({
+        const instance = createGrid({
           height: 100,
           aspectRatio: 0.5,
           columns: 5,
@@ -107,7 +129,12 @@ describe('grid', () => {
 
   describe('rows and columns', () => {
     it('can be configured with rows and columns', () => {
-      const instance = grid({ width: 100, height: 400, columns: 20, rows: 30 });
+      const instance = createGrid({
+        width: 100,
+        height: 400,
+        columns: 20,
+        rows: 30,
+      });
       expect(instance.columns).toEqual(20);
       expect(instance.rows).toEqual(30);
       const { gridDimensions } = instance;
@@ -118,7 +145,7 @@ describe('grid', () => {
 
   describe('cell dimensions', () => {
     it('can be configured with cell dimensions', () => {
-      const instance = grid({
+      const instance = createGrid({
         width: 100,
         height: 400,
         cellWidth: 20,
@@ -134,7 +161,7 @@ describe('grid', () => {
 
   describe('gutter dimensions', () => {
     it('can be configured with individual gutter dimensions', () => {
-      const instance = grid({
+      const instance = createGrid({
         width: 100,
         height: 200,
         columns: 10,
@@ -148,7 +175,7 @@ describe('grid', () => {
   });
 
   it('can be configured with a single gutter dimension', () => {
-    const instance = grid({
+    const instance = createGrid({
       width: 100,
       height: 200,
       columns: 10,
@@ -162,7 +189,7 @@ describe('grid', () => {
   describe('combinations', () => {
     describe('valid dimensions with columns and rows', () => {
       it('calculates cellWidth, cellHeight and sets gutters to 0', () => {
-        const instance = grid({
+        const instance = createGrid({
           width: 500,
           height: 700,
           columns: 5,
@@ -178,7 +205,7 @@ describe('grid', () => {
     describe('with no dimenions', () => {
       describe('with columns, rows and cell dimensions', () => {
         it('calculates dimensions', () => {
-          const instance = grid({
+          const instance = createGrid({
             cellWidth: 100,
             cellHeight: 50,
             rows: 5,
@@ -191,7 +218,7 @@ describe('grid', () => {
 
       describe('with columns, rows, cell dimensions and gutters', () => {
         it('calculates dimensions', () => {
-          const instance = grid({
+          const instance = createGrid({
             cellWidth: 100,
             cellHeight: 50,
             rows: 5,
@@ -206,7 +233,7 @@ describe('grid', () => {
       describe('valid dimensions with valid cellWidth and cellHeight', () => {
         describe('with cells that exactly fit without gutterspace', () => {
           it('calculates rows and columns', () => {
-            const instance = grid({
+            const instance = createGrid({
               width: 500,
               height: 700,
               cellWidth: 100,
@@ -222,7 +249,7 @@ describe('grid', () => {
 
       describe('with cells that leave gutterspace', () => {
         it('calculates rows, columns and gutters', () => {
-          const instance = grid({
+          const instance = createGrid({
             width: 500, //
             height: 700,
             cellWidth: 70,
@@ -237,7 +264,7 @@ describe('grid', () => {
 
       describe('with dimensions, columns, rows, valid cellWidth and valid cellHeight', () => {
         it('calculates gutters', () => {
-          const instance = grid({
+          const instance = createGrid({
             columns: 10,
             rows: 8,
             cellWidth: 40,
@@ -254,7 +281,12 @@ describe('grid', () => {
     describe('cellCount', () => {
       it('returns the correct number of cells', () => {
         expect(
-          grid({ width: 100, height: 300, columns: 12, rows: 13 }).cellCount()
+          createGrid({
+            width: 100,
+            height: 300,
+            columns: 12,
+            rows: 13,
+          }).cellCount()
         ).toBe(156);
       });
     });
@@ -262,7 +294,7 @@ describe('grid', () => {
     describe('cellAt', () => {
       describe('with invalid params', () => {
         it('throws an error', () => {
-          const instance = grid({
+          const instance = createGrid({
             width: 100,
             height: 300,
             columns: 12,
@@ -289,10 +321,12 @@ describe('grid', () => {
       describe('with an invalid vertical index', () => {
         it('throws and error', () => {
           expect(() =>
-            grid({ width: 100, height: 300, columns: 12, rows: 13 }).cellAt(
-              3,
-              15
-            )
+            createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            }).cellAt(3, 15)
           ).toThrowError(INVALID_CELL_INDEX_MESSAGE);
         });
       });
@@ -300,17 +334,19 @@ describe('grid', () => {
       describe('with an invalid horizontal index', () => {
         it('throws and error', () => {
           expect(() =>
-            grid({ width: 100, height: 300, columns: 12, rows: 13 }).cellAt(
-              22,
-              5
-            )
+            createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            }).cellAt(22, 5)
           ).toThrowError(INVALID_CELL_INDEX_MESSAGE);
         });
       });
 
       describe('with valid indexes', () => {
         it('returns a cell at the correct position and with the correct dimensions', () => {
-          const instance = grid({
+          const instance = createGrid({
             width: 100,
             height: 300,
             columns: 12,

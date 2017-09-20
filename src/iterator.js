@@ -1,6 +1,6 @@
 export const MISSING_GRID_MESSAGE = 'You must supply a grid';
 
-const iterator = grid => {
+const createIterator = grid => {
   if (!grid) {
     throw new Error(MISSING_GRID_MESSAGE);
   }
@@ -34,4 +34,4 @@ const iterator = grid => {
   };
 };
 
-export default iterator;
+export default createIterator;

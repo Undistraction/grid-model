@@ -1,4 +1,4 @@
-import point from './point';
+import createPoint from './point';
 
 export const INVALID_PARAMS_ERROR_MESSAGE =
   'You must supply a point object and size object';
@@ -18,13 +18,13 @@ const cell = (origin, dimensions) => {
       return origin;
     },
     get topRightPoint() {
-      return point(right(), top());
+      return createPoint(right(), top());
     },
     get bottomLeftPoint() {
-      return point(left(), bottom());
+      return createPoint(left(), bottom());
     },
     get bottomRightPoint() {
-      return point(right(), bottom());
+      return createPoint(right(), bottom());
     },
     get top() {
       return top();

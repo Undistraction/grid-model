@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import iterator, { MISSING_GRID_MESSAGE } from '../iterator';
-import grid from '../grid';
+import createIterator, { MISSING_GRID_MESSAGE } from '../iterator';
+import createGrid from '../grid';
 
 const times = x => f => {
   if (x > 0) {
@@ -12,19 +12,19 @@ const times = x => f => {
 describe('iterator', () => {
   describe('without a grid', () => {
     it('throws and error called without a grid', () => {
-      expect(() => iterator()).toThrowError(MISSING_GRID_MESSAGE);
+      expect(() => createIterator()).toThrowError(MISSING_GRID_MESSAGE);
     });
   });
 
   describe('with a grid', () => {
     it('iterates through each cell', () => {
-      const gridInstance = grid({
+      const gridInstance = createGrid({
         width: 100,
         height: 200,
         columns: 10,
         rows: 12,
       });
-      const instance = iterator(gridInstance);
+      const instance = createIterator(gridInstance);
       // 120 cells
       _.times(120, () => {
         expect(instance.next().done).toBeFalsy();

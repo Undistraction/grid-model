@@ -1,7 +1,7 @@
 import { isNumber } from 'lodash';
-import dimensions from './dimensions';
-import cell from './cell';
-import point from './point';
+import createDimensions from './dimensions';
+import createCell from './cell';
+import createPoint from './point';
 
 export const CANT_DERIVE_CELL_DIMENSIONS_MESSAGE =
   "Grid Couldn't calculate cell dimensions from supplied arguments";
@@ -23,7 +23,7 @@ export const INVALID_CELL_INDEX_MESSAGE = 'The cell index supplied was invalid';
 export const INVALID_PARAMS_TO_CELL_AT_MESSAGE =
   'You must supply an x and y position to cellAt()';
 
-const grid = (
+const createGrid = (
   {
     width,
     height,
@@ -46,7 +46,7 @@ const grid = (
     const xPos = (getCellDimensions().width + getGutterDimensions().width) * x;
     const yPos =
       (getCellDimensions().height + getGutterDimensions().height) * y;
-    return point(xPos, yPos);
+    return createPoint(xPos, yPos);
   };
 
   const dimensionsForCell = (x, y) => {
@@ -151,7 +151,7 @@ const grid = (
       throw new Error(INVALID_PARAMS_MESSAGE);
     }
 
-    return dimensions({ width, height, aspectRatio });
+    return createDimensions({ width, height, aspectRatio });
   };
 
   const saveGridDimensions = () => {
@@ -171,7 +171,7 @@ const grid = (
       throw new Error(INVALID_GRID_DIMENSIONS_MESSAGE);
     }
 
-    return dimensions({ width: wholeColumns, height: wholeRows });
+    return createDimensions({ width: wholeColumns, height: wholeRows });
   };
 
   const saveCellDimensions = () => {
@@ -182,7 +182,7 @@ const grid = (
       throw new Error(CANT_DERIVE_CELL_DIMENSIONS_MESSAGE);
     }
 
-    return dimensions({ width: cW, height: cH });
+    return createDimensions({ width: cW, height: cH });
   };
 
   const saveGutterDimensions = () => {
@@ -205,7 +205,7 @@ const grid = (
       gh = vGutter;
     }
 
-    const d = dimensions({
+    const d = createDimensions({
       width: gw,
       height: gh,
     });
@@ -251,9 +251,7 @@ const grid = (
       throw new Error(INVALID_CELL_INDEX_MESSAGE);
     }
 
-    const cellTopLeftPoint = topLeftPointForCell(x, y);
-    const cellDimensions = dimensionsForCell(x, y);
-    return cell(cellTopLeftPoint, cellDimensions);
+    return createCell(topLeftPointForCell(x, y), dimensionsForCell(x, y));
   };
 
   // ---------------------------------------------------------------------------
@@ -302,4 +300,4 @@ const grid = (
   };
 };
 
-export default grid;
+export default createGrid;

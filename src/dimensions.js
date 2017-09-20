@@ -10,7 +10,7 @@ const throwInvalidParamError = (param, value) => {
   throw new Error(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
 };
 
-const dimensions = ({ width, height, aspectRatio }) => {
+const createDimensions = ({ width, height, aspectRatio }) => {
   // Validate supplied params are valid
   if (width && !isNumberOrPercentString(width))
     throwInvalidParamError('width', width);
@@ -56,4 +56,4 @@ const dimensions = ({ width, height, aspectRatio }) => {
   };
 };
 
-export default dimensions;
+export default createDimensions;
