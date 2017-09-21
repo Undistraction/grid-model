@@ -2,7 +2,7 @@ import { isNumber } from 'lodash';
 
 import { isNumberOrPercentString, isPositiveNumber } from './validations';
 
-export const INVALID_DIMENSION_MESSAGE =
+export const MISSING_PARAMS_MESSAGE =
   'You must supply at least two arguments of: [width, height, aspectRatio]';
 export const INVALID_PARAMS_MESSAGE = 'Parameter was invalid:';
 
@@ -10,15 +10,14 @@ const throwInvalidParamError = (param, value) => {
   throw new Error(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
 };
 
-const createDimensions = ({ width, height, aspectRatio }) => {
-  // We need at least two params
-  const validParams = [width, height, aspectRatio].filter(x => {
-    return x !== undefined && x !== null && x !== '';
-  });
+const throwMissingParamsError = () => {
+  throw new Error(MISSING_PARAMS_MESSAGE);
+};
 
+const createDimensions = ({ width, height, aspectRatio }) => {
   // Validate we have the params we need
-  if (validParams.length < 2) {
-    throw new Error(INVALID_PARAMS_MESSAGE);
+  if ([width, height, aspectRatio].filter(x => isNumber(x)).length < 2) {
+    throwMissingParamsError();
   }
 
   // Validate supplied params are valid
@@ -26,15 +25,10 @@ const createDimensions = ({ width, height, aspectRatio }) => {
     throwInvalidParamError('width', width);
 
   if (height && !isNumberOrPercentString(height))
-    throwInvalidParamError('width', width);
+    throwInvalidParamError('height', height);
 
   if (aspectRatio && !isPositiveNumber(aspectRatio))
     throwInvalidParamError('aspectRatio', aspectRatio);
-
-  const _width = isNumber(width) ? width : height * aspectRatio;
-  const _height = isNumber(height) ? height : width / aspectRatio;
-  const _aspectRatio =
-    (!width || !height) && aspectRatio ? aspectRatio : width / height;
 
   // ---------------------------------------------------------------------------
   // API
@@ -44,13 +38,16 @@ const createDimensions = ({ width, height, aspectRatio }) => {
 
   return {
     get width() {
-      return _width;
+      if (!isNumber(width)) width = height * aspectRatio;
+      return width;
     },
     get height() {
-      return _height;
+      if (!isNumber(height)) height = width / aspectRatio;
+      return height;
     },
     get aspectRatio() {
-      return _aspectRatio;
+      if (!isNumber(aspectRatio)) aspectRatio = width / height;
+      return aspectRatio;
     },
     area,
   };

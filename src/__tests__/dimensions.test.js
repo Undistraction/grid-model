@@ -44,7 +44,7 @@ describe('dimensions', () => {
     ).toThrowError(new RegExp(INVALID_PARAMS_MESSAGE));
   });
 
-  it('stores width and height', () => {
+  it.only('stores width and height', () => {
     const instance = createDimensions({ width: 100, height: 200 });
     expect(instance.width).toBe(100);
     expect(instance.height).toBe(200);
