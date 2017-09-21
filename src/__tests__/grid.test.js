@@ -377,8 +377,6 @@ describe('grid', () => {
 
       describe('regionForCells', () => {});
 
-      describe('regionForRows', () => {});
-
       describe('regionForColumns', () => {
         describe('with an invalid start index', () => {
           it('throws an error', () => {
@@ -520,7 +518,7 @@ describe('grid', () => {
           });
         });
 
-        describe('with a valid sROW index', () => {
+        describe('with a valid row index', () => {
           it('returns the region of that column', () => {
             const instance = createGrid({
               width: 100,

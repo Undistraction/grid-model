@@ -34,14 +34,72 @@ npm publish
 The grid supports as many combinations of parameters as possible, calculating the missing params from those that were supplies. In the event conflicting params are supplied it will drop the most sensible param and use the others.
 In the event it doesn't have enough params to calculate the missing params, it will throw an error. It doesn't support situations where the width of the columns or the height of the rows is greater than the width or height of the grid and will throw an error in this situation.
 
-- width + height = calculate aspectRatio
-- width + aspectRatio = calculate height
-- height + aspectRatio = calculate width
-- width + height + aspectRatio = ignore aspectRatio and calculate from width + height
-- width = error
-- height = error
-- aspectRatio = error
-- dimensions + columns + rows = calculate cellWidth, cellHeight, gutterWidth, gutterHeight
-- dimensions + columns + cellHeight = calculate rows, cellWidth, gutterWidth, gutterHeight
-- dimensions + rows + cellWidth = calculate colums, cellHeight, gutterWidth, gutterHeight
+## Usage
+
+This library contains a few objects you need to understand.
+
+- `grid` represents a series of cells aranged in rows and columns.
+- `point` represents a point in 2D space within the grid.
+- `dimensions` represents an area in 2D space within the grid.
+- `region` represents location and dimensions of a part of the grid encompassing one or more cells.
+
+Create a grid:
+
+```
+const grid = createGrid({
+  width: 800,
+  height: 1200,
+  columns: 10,
+  rows: 12,
+  gutter: 10
+})
+```
+
+Retrieve basic information about the grid:
+
+```
+grid.dimensions.width // 800
+grid.dimensions.height // 1200
+grid.gridDimensions.width // 10
+grid.gridDimensions.height // 12
+grid.gutterDimensions.width // 10
+grid.gutterDimensions.height // 10
+```
+
+So far so meh, but now we can get information about the cells defined by the grid.
+
+Retrieve the total number of cells:
+
+```
+grid.cellCount // 120
+```
+
+Retrieve information about a particular cell:
+
+```
+const cellRegion = grid.regionForCellAt(6, 3)
+cellRegion.dimensions.width //
+cellRegion.dimensions.height //
+cellRegion.topLeftPoint.x //
+cellRegion.bottomRightPoint.y
+cellRegion.top //
+cellRegion.right //
+```
+
+Retrieve information about a single row or column:
+
+```
+grid.regionForRows(3).dimensions.width
+grid.regionForColumn(6).bottomLeftPoint.x
+```
+
+Or multiple rows or columns:
+
+```
+grid.regionForRows(3, 8).dimensions.width
+grid.regionForColumn(6,10).topRightPoint.x
+```
+
+
+
 

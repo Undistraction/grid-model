@@ -1,7 +1,8 @@
 {
   "name": "grid-model",
   "version": "0.0.1",
-  "description": "This project is a simple library to model a grid and access information about the cells within it.",
+  "description":
+    "This project is a simple library to model a grid and access information about the cells within it.",
   "main": "lib/index.js",
   "repository": "git@github.com:Undistraction/grid-model.git",
   "author": "Pedr Browne <pedr.browne@gmail.com>",
@@ -13,6 +14,8 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^21.0.2",
     "babel-plugin-dynamic-import-node": "^1.1.0",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -32,6 +35,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=development rollup --config",
-    "test": "NODE_ENV=test jest --config jest.config.js --watch"
+    "test": "NODE_ENV=test jest --config jest.config.js --watch",
+    "example":
+      "NODE_ENV=test babel docs/example.js --out-file docs/example.compiled.js && node docs/example.compiled.js"
   }
 }
