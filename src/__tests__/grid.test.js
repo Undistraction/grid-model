@@ -539,7 +539,7 @@ describe('grid', () => {
           });
         });
 
-        describe.only('with a valid start and end column index', () => {
+        describe('with a valid start and end column index', () => {
           it('returns a region spanning those regions', () => {
             const instance = createGrid({
               width: 100,

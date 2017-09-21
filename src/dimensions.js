@@ -13,11 +13,8 @@ const throwIncorrectNumberOfParamsError = () => {
   throw new Error(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
 };
 
-const createDimensions = ({ width, height, aspectRatio }) => {
-  // Validate supplied params are valid
-  if (width && !isNumber(width)) {
-    throwInvalidParamError('width', width);
-  }
+const validateArgs = (width, height, aspectRatio) => {
+  if (width && !isNumber(width)) throwInvalidParamError('width', width);
 
   if (height && !isNumber(height)) throwInvalidParamError('height', height);
 
@@ -29,6 +26,21 @@ const createDimensions = ({ width, height, aspectRatio }) => {
     throwIncorrectNumberOfParamsError();
   }
 
+  return {
+    validatedWidth: isNumber(width) ? width : height * aspectRatio,
+    validatedHeight: isNumber(height) ? height : width / aspectRatio,
+    validatedAspectRatio: isNumber(aspectRatio) ? aspectRatio : width / height,
+  };
+};
+
+const createDimensions = ({ width, height, aspectRatio }) => {
+  // Validate supplied params are valid
+  const {
+    validatedWidth,
+    validatedHeight,
+    validatedAspectRatio,
+  } = validateArgs(width, height, aspectRatio);
+
   // ---------------------------------------------------------------------------
   // API
   // ---------------------------------------------------------------------------
@@ -37,16 +49,13 @@ const createDimensions = ({ width, height, aspectRatio }) => {
 
   return {
     get width() {
-      if (!isNumber(width)) width = height * aspectRatio;
-      return width;
+      return validatedWidth;
     },
     get height() {
-      if (!isNumber(height)) height = width / aspectRatio;
-      return height;
+      return validatedHeight;
     },
     get aspectRatio() {
-      if (!isNumber(aspectRatio)) aspectRatio = width / height;
-      return aspectRatio;
+      return validatedAspectRatio;
     },
     area,
   };
