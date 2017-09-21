@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import { isNumber, isInteger } from 'lodash';
 
 const IS_PERCENTAGE = /^(\d+|\d+[.]\d+)%{1}$/;
 
@@ -8,3 +8,5 @@ export const isNumberOrPercentString = value =>
   isPercentString(value) || isNumber(value);
 
 export const isPositiveNumber = value => isNumber(value) && value >= 0;
+
+export const isPositiveInteger = value => isInteger(value) && value >= 0;

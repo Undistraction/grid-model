@@ -56,24 +56,6 @@ describe('dimensions', () => {
     expect(instance.height).toBe(0);
   });
 
-  // it.only(
-  //   'ignores supplied aspectRatio if width and height are supplied',
-  //   () => {
-  //     const instance = createDimensions({
-  //       width: 100,
-  //       height: 200,
-  //       aspectRatio: 66,
-  //     });
-  //     expect(() =>
-  //       createDimensions({
-  //         width: 100,
-  //         height: 200,
-  //         aspectRatio: 66,
-  //       })
-  //     ).toThrowError(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
-  //   }
-  // );
-
   it('calculates width if only height and aspectRatio are supplied', () => {
     const instance = createDimensions({ height: 200, aspectRatio: 0.5 });
     expect(instance.width).toBe(100);

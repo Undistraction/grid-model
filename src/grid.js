@@ -1,4 +1,5 @@
-import { isNumber } from 'lodash';
+import { isNumber, isNil } from 'lodash';
+import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
 import createRegion from './region';
 import createPoint from './point';
@@ -23,6 +24,10 @@ export const INVALID_CELL_INDEX_MESSAGE = 'The cell index supplied was invalid';
 export const INVALID_PARAMS_TO_CELL_AT_MESSAGE =
   'You must supply an x and y position to cellAt()';
 
+export const INVALID_COLUMN_INDEX = 'The column index was invalid';
+
+export const INVALID_ROW_INDEX = 'The column index was invalid';
+
 const createGrid = (
   {
     width,
@@ -37,21 +42,70 @@ const createGrid = (
     gutter,
   } = {}
 ) => {
-  let _dimensions;
-  let _gridDimensions;
-  let _cellDimensions;
-  let _gutterDimensions;
+  let dimensions;
+  let gridDimensions;
+  let cellDimensions;
+  let gutterDimensions;
 
-  const topLeftPointForCell = (x, y) => {
-    const xPos = (getCellDimensions().width + getGutterDimensions().width) * x;
-    const yPos =
-      (getCellDimensions().height + getGutterDimensions().height) * y;
-    return createPoint(xPos, yPos);
+  const regionIncluding = cells => {
+    const tlX = cells
+      .map(cell => cell.topLeftPoint.x)
+      .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+    const tlY = cells
+      .map(cell => cell.topLeftPoint.y)
+      .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+    const brX = cells
+      .map(cell => cell.bottomRightPoint.x)
+      .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+    const brY = cells
+      .map(cell => cell.bottomRightPoint.y)
+      .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+
+    const regionTopLeftPoint = createPoint(tlX, tlY);
+    const regionDimensions = createDimensions({
+      width: brX - tlX,
+      height: brY - tlY,
+    });
+
+    return createRegion(regionTopLeftPoint, regionDimensions);
   };
 
-  const dimensionsForCell = (x, y) => {
-    return getCellDimensions();
+  const getDimensions = () => {
+    dimensions = dimensions || saveDimensions();
+    return dimensions;
   };
+
+  const getGridDimensions = () => {
+    gridDimensions = gridDimensions || saveGridDimensions();
+    return gridDimensions;
+  };
+
+  const getCellDimensions = () => {
+    cellDimensions = cellDimensions || saveCellDimensions();
+    return cellDimensions;
+  };
+
+  const getGutterDimensions = () => {
+    gutterDimensions = gutterDimensions || saveGutterDimensions();
+    return gutterDimensions;
+  };
+
+  const canDeriveWidth = () => !!(cellHeight && rows);
+  const canDeriveHeight = () => !!(cellWidth && columns);
+  const deriveHeight = () => cellHeight * rows + gutterHeight * (rows - 1);
+  const deriveWidth = () => cellWidth * columns + gutterWidth * (columns - 1);
+
+  const canDeriveCellWidth = () => !!(getDimensions().width && columns);
+  const canDeriveCellHeight = () => !!(getDimensions().height && rows);
+  const deriveCellWidth = () =>
+    (getDimensions().width - gutterWidth * (columns - 1)) / columns;
+  const deriveCellHeight = () =>
+    (getDimensions().height - gutterHeight * (rows - 1)) / rows;
+
+  const canDeriveColumns = () => width && cellWidth;
+  const canDeriveRows = () => height && cellHeight;
+  const deriveColumns = () => getDimensions().width / cellWidth;
+  const deriveRows = () => getDimensions().height / cellHeight;
 
   /**
    * 
@@ -60,69 +114,25 @@ const createGrid = (
    * 
    * Filter out any params that haven't been set. 
    */
-  const validParamCount = params => {
-    return params.filter(x => {
-      return x !== undefined && x !== null && x !== '';
-    }).length;
-  };
+  const validParamCount = params =>
+    params.filter(x => !isNil(x) && x !== '').length;
 
   const validateGutters = (hGutter, vGutter) =>
     gutterWidth === 0 ||
     gutterWidth === hGutter ||
     (gutterHeight === 0 || gutterHeight === vGutter);
 
-  const canDeriveCellWidth = () => {
-    return !!(getDimensions().width && columns);
+  const isValidColumnIndex = columnIndex =>
+    columnIndex <= getGridDimensions().width - 1;
+  const isValidRowIndex = rowIndex =>
+    rowIndex <= getGridDimensions().height - 1;
+
+  const topLeftPointForCell = (x, y) => {
+    const xPos = (getCellDimensions().width + getGutterDimensions().width) * x;
+    const yPos =
+      (getCellDimensions().height + getGutterDimensions().height) * y;
+    return createPoint(xPos, yPos);
   };
-
-  const canDeriveCellHeight = () => {
-    return !!(getDimensions().height && rows);
-  };
-
-  const deriveCellWidth = () =>
-    (getDimensions().width - gutterWidth * (columns - 1)) / columns;
-
-  const deriveCellHeight = () =>
-    (getDimensions().height - gutterHeight * (rows - 1)) / rows;
-
-  const canDeriveColumns = () => {
-    return width && cellWidth;
-  };
-
-  const canDeriveRows = () => {
-    return height && cellHeight;
-  };
-
-  const deriveColumns = () => getDimensions().width / cellWidth;
-  const deriveRows = () => getDimensions().height / cellHeight;
-
-  const rowsValid = rows => rows > 1;
-  const columnsValid = columns => columns > 1;
-
-  const getDimensions = () => {
-    if (!_dimensions) _dimensions = saveDimensions();
-    return _dimensions;
-  };
-
-  const getGridDimensions = () => {
-    if (!_gridDimensions) _gridDimensions = saveGridDimensions();
-    return _gridDimensions;
-  };
-
-  const getCellDimensions = () => {
-    if (!_cellDimensions) _cellDimensions = saveCellDimensions();
-    return _cellDimensions;
-  };
-
-  const getGutterDimensions = () => {
-    if (!_gutterDimensions) _gutterDimensions = saveGutterDimensions();
-    return _gutterDimensions;
-  };
-
-  const canDeriveWidth = () => !!(cellHeight && rows);
-  const canDeriveHeight = () => !!(cellWidth && columns);
-  const deriveHeight = () => cellHeight * rows + gutterHeight * (rows - 1);
-  const deriveWidth = () => cellWidth * columns + gutterWidth * (columns - 1);
 
   /**
    * Create a dimensions object to represent the width and height of the grid.
@@ -167,7 +177,7 @@ const createGrid = (
     const wholeRows = Number(rowParts[0]);
     const wholeColumns = Number(columnParts[0]);
 
-    if (!rowsValid(wholeRows) || !columnsValid(wholeColumns)) {
+    if (!wholeRows > 0 || !wholeColumns > 0) {
       throw new Error(INVALID_GRID_DIMENSIONS_MESSAGE);
     }
 
@@ -251,7 +261,51 @@ const createGrid = (
       throw new Error(INVALID_CELL_INDEX_MESSAGE);
     }
 
-    return createRegion(topLeftPointForCell(x, y), dimensionsForCell(x, y));
+    return createRegion(topLeftPointForCell(x, y), getCellDimensions());
+  };
+
+  const regionForColumns = (start, end) => {
+    // Validate start
+    if (
+      isNil(start) ||
+      !isPositiveInteger(start) ||
+      !isValidColumnIndex(start)
+    ) {
+      throw new Error(INVALID_COLUMN_INDEX);
+    }
+
+    // Validate end
+    if (!isNil(end) && (!isPositiveInteger(end) || !isValidColumnIndex(end))) {
+      throw new Error(INVALID_COLUMN_INDEX);
+    }
+
+    const startCell = regionForCellAt(start, 0);
+    const endCell = regionForCellAt(
+      isNumber(end) ? end : start,
+      getGridDimensions().height - 1
+    );
+
+    return regionIncluding([startCell, endCell]);
+  };
+
+  const regionForRows = (start, end) => {
+    // Validate start
+    if (isNil(start) || !isPositiveInteger(start) || !isValidRowIndex(start)) {
+      throw new Error(INVALID_COLUMN_INDEX);
+    }
+
+    // Validate end
+    if (!isNil(end) && (!isPositiveInteger(end) || !isValidRowIndex(end))) {
+      throw new Error(INVALID_COLUMN_INDEX);
+    }
+
+    const startCell = regionForCellAt(0, start);
+    const endCell = regionForCellAt(
+      getGridDimensions().width - 1,
+      isNumber(end) ? end : start
+    );
+
+    return regionIncluding([startCell, endCell]);
   };
 
   // ---------------------------------------------------------------------------
@@ -260,43 +314,45 @@ const createGrid = (
 
   return {
     get width() {
-      return _dimensions.width;
+      return dimensions.width;
     },
     get height() {
-      return _dimensions.height;
+      return dimensions.height;
     },
     get dimensions() {
-      return _dimensions;
+      return dimensions;
     },
     get aspectRatio() {
-      return _dimensions.aspectRatio;
+      return dimensions.aspectRatio;
     },
     get rows() {
-      return _gridDimensions.height;
+      return gridDimensions.height;
     },
     get columns() {
-      return _gridDimensions.width;
+      return gridDimensions.width;
     },
     get gridDimensions() {
-      return _gridDimensions;
+      return gridDimensions;
     },
     get cellWidth() {
-      return _cellDimensions.width;
+      return cellDimensions.width;
     },
     get cellHeight() {
-      return _cellDimensions.height;
+      return cellDimensions.height;
     },
     get cellDimensions() {
-      return _cellDimensions;
+      return cellDimensions;
     },
     get gutterWidth() {
-      return _gutterDimensions.width;
+      return gutterDimensions.width;
     },
     get gutterHeight() {
-      return _gutterDimensions.height;
+      return gutterDimensions.height;
     },
     cellCount,
     regionForCellAt,
+    regionForColumns,
+    regionForRows,
   };
 };
 

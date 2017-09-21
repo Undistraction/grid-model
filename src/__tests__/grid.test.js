@@ -2,7 +2,13 @@ import createGrid, {
   INVALID_PARAMS_MESSAGE,
   INVALID_PARAMS_TO_CELL_AT_MESSAGE,
   INVALID_CELL_INDEX_MESSAGE,
+  INVALID_COLUMN_INDEX,
+  INVALID_ROW_INDEX,
 } from '../grid';
+
+import createPoint from '../point';
+import createDimensions from '../dimensions';
+import createRegion from '../region';
 
 describe('grid', () => {
   describe('invalid params', () => {
@@ -54,7 +60,7 @@ describe('grid', () => {
         });
         expect(instance.width).toEqual(100);
         expect(instance.height).toEqual(200);
-        const dimensions = instance.dimensions;
+        const { dimensions } = instance;
         expect(dimensions.width).toEqual(100);
         expect(dimensions.height).toEqual(200);
       });
@@ -373,7 +379,185 @@ describe('grid', () => {
 
       describe('regionForRows', () => {});
 
-      describe('regionForColumns', () => {});
+      describe('regionForColumns', () => {
+        describe('with an invalid start index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
+
+            expect(() => instance.regionForColumns()).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForColumns('2')).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForColumns(13)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForColumns(-4)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+          });
+        });
+
+        describe('with an invalid end index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
+
+            expect(() => instance.regionForColumns(2, '4')).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForColumns(2, 13)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForColumns(-4)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+          });
+        });
+
+        describe('with a valid start column index', () => {
+          it('returns the region of that column', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const columnRegion = instance.regionForColumns(3);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(30);
+            expect(topLeftPoint.y).toEqual(0);
+            expect(dimensions.width).toEqual(10);
+            expect(dimensions.height).toEqual(300);
+          });
+        });
+
+        describe('with a valid start and end column index', () => {
+          it('returns a region spanning those regions', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const columnRegion = instance.regionForColumns(2, 9);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(20);
+            expect(topLeftPoint.y).toEqual(0);
+            expect(dimensions.width).toEqual(80);
+            expect(dimensions.height).toEqual(300);
+          });
+        });
+      });
+
+      describe('regionForRows', () => {
+        describe('with an invalid start index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            expect(() => instance.regionForRows()).toThrowError(
+              INVALID_ROW_INDEX
+            );
+
+            expect(() => instance.regionForRows('2')).toThrowError(
+              INVALID_ROW_INDEX
+            );
+
+            expect(() => instance.regionForRows(11)).toThrowError(
+              INVALID_ROW_INDEX
+            );
+
+            expect(() => instance.regionForRows(-4)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+          });
+        });
+
+        describe('with an invalid end index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            expect(() => instance.regionForRows(2, '4')).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForRows(2, 13)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+
+            expect(() => instance.regionForRows(-4)).toThrowError(
+              INVALID_COLUMN_INDEX
+            );
+          });
+        });
+
+        describe('with a valid sROW index', () => {
+          it('returns the region of that column', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const columnRegion = instance.regionForRows(3);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(0);
+            expect(topLeftPoint.y).toEqual(90);
+            expect(dimensions.width).toEqual(100);
+            expect(dimensions.height).toEqual(30);
+          });
+        });
+
+        describe.only('with a valid start and end column index', () => {
+          it('returns a region spanning those regions', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const columnRegion = instance.regionForRows(2, 9);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(0);
+            expect(topLeftPoint.y).toEqual(60);
+            expect(dimensions.width).toEqual(100);
+            expect(dimensions.height).toEqual(240);
+          });
+        });
+      });
     });
   });
 });

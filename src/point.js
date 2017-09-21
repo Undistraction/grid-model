@@ -7,15 +7,12 @@ const createPoint = (x, y) => {
     throw new Error(INVALID_PARAMS_MESSAGE);
   }
 
-  const _x = x;
-  const _y = y;
-
   return {
     get x() {
-      return _x;
+      return x;
     },
     get y() {
-      return _y;
+      return y;
     },
   };
 };

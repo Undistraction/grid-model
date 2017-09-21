@@ -1,4 +1,8 @@
-import { isNumber, isPercentString, isPositiveNumber } from '../validations';
+import {
+  isPercentString,
+  isPositiveNumber,
+  isPositiveInteger,
+} from '../validations';
 
 describe('validations', () => {
   describe('isPositiveNumber', () => {
@@ -28,6 +32,22 @@ describe('validations', () => {
       const invalidValues = [44, '44', '44', '-44%', '%44', '44%%', '44 %'];
       for (const value of invalidValues) {
         expect(isPercentString(value)).toBeFalsy();
+      }
+    });
+  });
+
+  describe('isPositiveInteger', () => {
+    it('should identify a positive integer', () => {
+      const validValues = [6, 66, 1, 0, -0];
+
+      for (const value of validValues) {
+        expect(isPositiveInteger(value)).toBeTruthy();
+      }
+    });
+    it('should identify a non-integer or negative number', () => {
+      const invalidValues = [-0.1, -1000, -1, -66];
+      for (const value of invalidValues) {
+        expect(isPositiveInteger(value)).toBeFalsy();
       }
     });
   });
