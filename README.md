@@ -10,9 +10,16 @@ The project is built using rollup using the config file `rollup.config.js`. It i
 yarn run build
 ```
 
+## Test
+
+Test the project using jest
+```
+yarn run test
+```
+
 ## Release
 
-Bump the version (patch, minor, major, prepatch, preminor, premajor, prerelease:)
+Bump the version (patch, minor, major, prepatch, preminor, premajor, prerelease)
 ```
 npm version patch -m "Bump version to  %s"
 ```
