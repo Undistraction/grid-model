@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { isPositiveNumber } from './validations';
 
 export const INCORRECT_NUMBER_OF_PARAMS_MESSAGE =

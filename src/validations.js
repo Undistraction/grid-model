@@ -1,4 +1,4 @@
-import { isNumber, isInteger } from 'lodash';
+import { isNumber, isInteger } from 'lodash-es';
 
 const IS_PERCENTAGE = /^(\d+|\d+[.]\d+)%{1}$/;
 

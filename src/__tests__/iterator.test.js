@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import createIterator, { MISSING_GRID_MESSAGE } from '../iterator';
 import createGrid from '../grid';
 

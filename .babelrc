@@ -1,5 +1,5 @@
 {
-  "ignore": ["node_modules/**"], // Ignore third party code
+  "only": ["src", "node_modules/lodash-es"], // Ignore third party code
   "env": {
     // Setup for tests
     "test": {
@@ -11,11 +11,11 @@
         [
           "env",
           {
-            modules: false
+            "modules": false
           }
         ]
       ],
-      "plugins": ["external-helpers"]
+      "plugins": ["external-helpers", "lodash"]
     }
   }
 }

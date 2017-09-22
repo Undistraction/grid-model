@@ -1,4 +1,4 @@
-import { isNumber, isNil } from 'lodash';
+import { isNumber, isNil } from 'lodash-es';
 import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
 import createRegion from './region';

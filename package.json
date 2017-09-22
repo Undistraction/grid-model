@@ -1,17 +1,17 @@
 {
   "name": "grid-model",
   "version": "0.0.1",
-  "description":
-    "This project is a simple library to model a grid and access information about the cells within it.",
+  "description": "This project is a simple library to model a grid and access information about the cells within it.",
   "main": "lib/index.js",
   "repository": "git@github.com:Undistraction/grid-model.git",
   "author": "Pedr Browne <pedr.browne@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "babel-plugin-lodash": "^3.2.11",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-prettier": "^2.3.1",
     "jest": "^21.1.0",
-    "lodash": "^4.17.4"
+    "lodash-es": "^4.17.4"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -36,7 +36,6 @@
   "scripts": {
     "build": "NODE_ENV=development rollup --config",
     "test": "NODE_ENV=test jest --config jest.config.js --watch",
-    "example":
-      "NODE_ENV=test babel docs/example.js --out-file docs/example.compiled.js && node docs/example.compiled.js"
+    "example": "NODE_ENV=test babel docs/example.js --out-file docs/example.compiled.js && node docs/example.compiled.js"
   }
 }
