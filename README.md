@@ -64,6 +64,8 @@ grid.gridDimensions.width // 10
 grid.gridDimensions.height // 12
 grid.gutterDimensions.width // 10
 grid.gutterDimensions.height // 10
+grid.cellDimensions.width //
+grid.cellDimensions.height //
 ```
 
 So far so meh, but now we can get information about the cells defined by the grid.

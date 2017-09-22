@@ -4,6 +4,10 @@ import createDimensions from './dimensions';
 import createRegion from './region';
 import createPoint from './point';
 
+// -----------------------------------------------------------------------------
+// Error Messages
+// -----------------------------------------------------------------------------
+
 export const CANT_DERIVE_CELL_DIMENSIONS_MESSAGE =
   "Grid Couldn't calculate cell dimensions from supplied arguments";
 
@@ -28,6 +32,47 @@ export const INVALID_COLUMN_INDEX = 'The column index was invalid';
 
 export const INVALID_ROW_INDEX = 'The column index was invalid';
 
+// -----------------------------------------------------------------------------
+// Utility
+// -----------------------------------------------------------------------------
+
+const regionForCells = cells => {
+  const tlX = cells
+    .map(cell => cell.topLeftPoint.x)
+    .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+  const tlY = cells
+    .map(cell => cell.topLeftPoint.y)
+    .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+  const brX = cells
+    .map(cell => cell.bottomRightPoint.x)
+    .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+  const brY = cells
+    .map(cell => cell.bottomRightPoint.y)
+    .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+
+  const regionTopLeftPoint = createPoint(tlX, tlY);
+  const regionDimensions = createDimensions({
+    width: brX - tlX,
+    height: brY - tlY,
+  });
+
+  return createRegion(regionTopLeftPoint, regionDimensions);
+};
+
+/**
+ * 
+ * @param {*} params Array of params to check
+ * @returns {array} of params that have been set
+ * 
+ * Filter out any params that haven't been set. 
+ */
+const validParamCount = params =>
+  params.filter(param => !isNil(param) && param !== '').length;
+
+// -----------------------------------------------------------------------------
+// Entry
+// -----------------------------------------------------------------------------
+
 const createGrid = (
   {
     width,
@@ -37,8 +82,8 @@ const createGrid = (
     columns,
     cellWidth,
     cellHeight,
-    gutterWidth = 0,
-    gutterHeight = 0,
+    gutterWidth,
+    gutterHeight,
     gutter,
   } = {}
 ) => {
@@ -46,29 +91,6 @@ const createGrid = (
   let gridDimensions;
   let cellDimensions;
   let gutterDimensions;
-
-  const regionIncluding = cells => {
-    const tlX = cells
-      .map(cell => cell.topLeftPoint.x)
-      .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
-    const tlY = cells
-      .map(cell => cell.topLeftPoint.y)
-      .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
-    const brX = cells
-      .map(cell => cell.bottomRightPoint.x)
-      .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
-    const brY = cells
-      .map(cell => cell.bottomRightPoint.y)
-      .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
-
-    const regionTopLeftPoint = createPoint(tlX, tlY);
-    const regionDimensions = createDimensions({
-      width: brX - tlX,
-      height: brY - tlY,
-    });
-
-    return createRegion(regionTopLeftPoint, regionDimensions);
-  };
 
   const getDimensions = () => {
     dimensions = dimensions || saveDimensions();
@@ -106,16 +128,6 @@ const createGrid = (
   const canDeriveRows = () => height && cellHeight;
   const deriveColumns = () => getDimensions().width / cellWidth;
   const deriveRows = () => getDimensions().height / cellHeight;
-
-  /**
-   * 
-   * @param {*} params Array of params to check
-   * @returns {array} of params that have been set
-   * 
-   * Filter out any params that haven't been set. 
-   */
-  const validParamCount = params =>
-    params.filter(x => !isNil(x) && x !== '').length;
 
   const validateGutters = (hGutter, vGutter) =>
     gutterWidth === 0 ||
@@ -223,8 +235,8 @@ const createGrid = (
   };
 
   // Transfer gutter value to gutterWidth and gutterHeight if they aren't set
-  if (!gutterWidth) gutterWidth = gutter || 0;
-  if (!gutterHeight) gutterHeight = gutter || 0;
+  if (!isNumber(gutterWidth)) gutterWidth = gutter || 0;
+  if (!isNumber(gutterHeight)) gutterHeight = gutter || 0;
 
   // Guard against missing params that would cause recursion
   if ((!columns && !cellWidth) || (!rows && !cellHeight)) {
@@ -285,7 +297,7 @@ const createGrid = (
       getGridDimensions().height - 1
     );
 
-    return regionIncluding([startCell, endCell]);
+    return regionForCells([startCell, endCell]);
   };
 
   const regionForRows = (start, end) => {
@@ -305,7 +317,7 @@ const createGrid = (
       isNumber(end) ? end : start
     );
 
-    return regionIncluding([startCell, endCell]);
+    return regionForCells([startCell, endCell]);
   };
 
   // ---------------------------------------------------------------------------
