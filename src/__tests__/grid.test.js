@@ -1,26 +1,36 @@
 import createGrid, {
   INVALID_PARAMS_MESSAGE,
-  INVALID_PARAMS_TO_CELL_AT_MESSAGE,
+  INVALID_CELL_LOCATION_MESSAGE,
   INVALID_CELL_INDEX_MESSAGE,
   INVALID_COLUMN_INDEX,
   INVALID_ROW_INDEX,
+  CONFLICTING_PARAMS_MESSAGE,
 } from '../grid';
 
-import createPoint from '../point';
-import createDimensions from '../dimensions';
-import createRegion from '../region';
-
 describe('grid', () => {
-  describe('invalid params', () => {
-    describe('with only valid dimensions', () => {
-      it('throws an error', () => {
-        expect(() => createGrid({ width: 100, height: 200 })).toThrowError(
-          INVALID_PARAMS_MESSAGE
-        );
-      });
-    });
+  describe('Not enough params are supplied to derive a valid grid', () => {
+    const invalidParamCombinations = [
+      {},
+      { width: 100, height: 200 },
+      { rows: 10, columns: 20 },
+      { cellWidth: 100, cellHeight: 20 },
+      { width: 100, columns: 3, cellHeight: 30 },
+      { height: 100, rows: 3, cellWidth: 30 },
+      { width: 100, height: 40, gutter: 30 },
+      { width: 100, height: 40, gutterWidth: 30 },
+      { width: 100, height: 40, gutterHeight: 30 },
+      { rows: 16, columns: 6, cellWidth: 49 },
+      { rows: 16, columns: 6, cellHeight: 49 },
+      { rows: 16, columns: 6, gutter: 10 },
+      { rows: 16, columns: 6, gutterWidth: 10 },
+      { rows: 16, columns: 6, gutterHeight: 10 },
+    ];
 
-    describe('with cellWidth that will exceed grid width at supplied columns', () => {
+    for (const params of invalidParamCombinations) {
+      expect(() => createGrid(params)).toThrowError(INVALID_PARAMS_MESSAGE);
+    }
+
+    describe('with cellWidth and columns that will exceed grid width', () => {
       it('throws an error', () => {
         expect(() =>
           createGrid({
@@ -30,11 +40,11 @@ describe('grid', () => {
             rows: 5,
             cellWidth: 40,
           })
-        ).toThrowError(INVALID_PARAMS_MESSAGE);
+        ).toThrowError(CONFLICTING_PARAMS_MESSAGE);
       });
     });
 
-    describe('with cellHeight that will exceed grid height at supplied columns', () => {
+    describe('with cellHeight and rows that will exceed grid height', () => {
       it('throws an error', () => {
         expect(() =>
           createGrid({
@@ -44,14 +54,14 @@ describe('grid', () => {
             rows: 5,
             cellHeight: 50,
           })
-        ).toThrowError(INVALID_PARAMS_MESSAGE);
+        ).toThrowError(CONFLICTING_PARAMS_MESSAGE);
       });
     });
   });
 
   describe('dimensions', () => {
-    describe('using width and height for dimensions', () => {
-      it('calculates returns the correct width and height', () => {
+    describe('supplying width and height', () => {
+      it('calculates correct aspectRatio', () => {
         const instance = createGrid({
           width: 100,
           height: 200,
@@ -60,24 +70,16 @@ describe('grid', () => {
         });
         expect(instance.width).toEqual(100);
         expect(instance.height).toEqual(200);
+        expect(instance.aspectRatio).toEqual(0.5);
         const { dimensions } = instance;
         expect(dimensions.width).toEqual(100);
         expect(dimensions.height).toEqual(200);
-      });
-
-      it('calculates correct aspect ratio', () => {
-        const instance = createGrid({
-          width: 100,
-          height: 200,
-          columns: 5,
-          rows: 8,
-        });
-        expect(instance.aspectRatio).toEqual(0.5); // 100 / 200
+        expect(instance.aspectRatio).toEqual(0.5);
       });
     });
 
-    describe('using width and aspaectRatio for dimensions', () => {
-      it('returns the correct width and aspectRatio', () => {
+    describe('supplying width and aspectRatio', () => {
+      it('calculates correct height', () => {
         const instance = createGrid({
           width: 100,
           aspectRatio: 0.5,
@@ -86,26 +88,16 @@ describe('grid', () => {
         });
         expect(instance.width).toEqual(100);
         expect(instance.aspectRatio).toEqual(0.5);
+        expect(instance.height).toEqual(200);
         const { dimensions } = instance;
         expect(dimensions.width).toEqual(100);
         expect(dimensions.aspectRatio).toEqual(0.5);
-      });
-
-      it('calculates correct height', () => {
-        const instance = createGrid({
-          width: 100,
-          aspectRatio: 0.5,
-          columns: 5,
-          rows: 8,
-        });
-        expect(instance.height).toEqual(200);
-        const { dimensions } = instance;
         expect(dimensions.height).toEqual(200);
       });
     });
 
-    describe('using height and aspaectRatio for dimensions', () => {
-      it('returns the correct height and aspectRatio', () => {
+    describe('supplying height and aspectRatio', () => {
+      it('calculates correct width', () => {
         const instance = createGrid({
           height: 100,
           aspectRatio: 0.5,
@@ -114,20 +106,10 @@ describe('grid', () => {
         });
         expect(instance.height).toEqual(100);
         expect(instance.aspectRatio).toEqual(0.5);
+        expect(instance.width).toEqual(50);
         const { dimensions } = instance;
         expect(dimensions.height).toEqual(100);
         expect(dimensions.aspectRatio).toEqual(0.5);
-      });
-
-      it('calculates correct width', () => {
-        const instance = createGrid({
-          height: 100,
-          aspectRatio: 0.5,
-          columns: 5,
-          rows: 8,
-        });
-        expect(instance.width).toEqual(50);
-        const { dimensions } = instance;
         expect(dimensions.width).toEqual(50);
       });
     });
@@ -192,52 +174,83 @@ describe('grid', () => {
     expect(instance.gutterHeight).toEqual(20);
   });
 
-  describe('combinations', () => {
-    describe('valid dimensions with columns and rows', () => {
-      it('calculates cellWidth, cellHeight and sets gutters to 0', () => {
+  describe('single cell grid', () => {
+    describe('valid dimensions and gridDimensions', () => {
+      it('derives a single cell grid', () => {
         const instance = createGrid({
-          width: 500,
-          height: 700,
-          columns: 5,
-          rows: 14,
+          width: 100,
+          height: 200,
+          columns: 1,
+          rows: 1,
         });
         expect(instance.cellWidth).toEqual(100);
-        expect(instance.cellHeight).toEqual(50);
-        expect(instance.gutterWidth).toEqual(0);
-        expect(instance.gutterHeight).toEqual(0);
+        expect(instance.cellHeight).toEqual(200);
       });
     });
 
-    describe('with no dimenions', () => {
-      describe('with columns, rows and cell dimensions', () => {
-        it('calculates dimensions', () => {
-          const instance = createGrid({
-            cellWidth: 100,
-            cellHeight: 50,
-            rows: 5,
-            columns: 10,
-          });
-          expect(instance.width).toEqual(1000);
-          expect(instance.height).toEqual(250);
+    describe('valid dimensions and cellDimensions', () => {
+      it('derives a single cell grid', () => {
+        const instance = createGrid({
+          width: 100,
+          height: 200,
+          cellWidth: 100,
+          cellHeight: 200,
         });
+        expect(instance.columns).toEqual(1);
+        expect(instance.rows).toEqual(1);
       });
+    });
 
-      describe('with columns, rows, cell dimensions and gutters', () => {
-        it('calculates dimensions', () => {
-          const instance = createGrid({
-            cellWidth: 100,
-            cellHeight: 50,
-            rows: 5,
-            columns: 10,
+    describe('valid dimensions and gridDimensions with gutter', () => {
+      it('throws an error', () => {
+        expect(() =>
+          createGrid({
+            width: 100,
+            height: 200,
+            columns: 1,
+            rows: 1,
             gutter: 10,
+          })
+        ).toThrowError(INVALID_COLUMN_INDEX);
+      });
+    });
+  });
+
+  describe('combinations', () => {
+    describe('valid', () => {
+      describe('with dimensions and grid dimensions', () => {
+        it('calculates cellWidth, cellHeight and sets gutters to 0', () => {
+          const instance = createGrid({
+            width: 500,
+            height: 700,
+            columns: 5,
+            rows: 14,
           });
-          expect(instance.width).toEqual(1090);
-          expect(instance.height).toEqual(290);
+          expect(instance.cellWidth).toEqual(100);
+          expect(instance.cellHeight).toEqual(50);
+          expect(instance.gutterWidth).toEqual(0);
+          expect(instance.gutterHeight).toEqual(0);
         });
       });
 
-      describe('valid dimensions with valid cellWidth and cellHeight', () => {
-        describe('with cells that exactly fit without gutterspace', () => {
+      describe('with dimensions, grid dimensions and gutters', () => {
+        it('calculates cellWidth and cellHeight', () => {
+          const instance = createGrid({
+            width: 500,
+            height: 700,
+            columns: 5,
+            rows: 14,
+            gutter: 20,
+          });
+          expect(instance.cellWidth).toEqual(84);
+          expect(instance.cellHeight).toBeCloseTo(31.42857, 4);
+          expect(instance.gutterWidth).toEqual(20);
+          expect(instance.gutterHeight).toEqual(20);
+        });
+      });
+
+      describe('with dimensions and cell dimensions', () => {
+        describe('that leave no remaining space for gutters', () => {
           it('calculates rows and columns', () => {
             const instance = createGrid({
               width: 500,
@@ -251,33 +264,49 @@ describe('grid', () => {
             expect(instance.gutterHeight).toEqual(0);
           });
         });
-      });
 
-      describe('with cells that leave gutterspace', () => {
-        it('calculates rows, columns and gutters', () => {
-          const instance = createGrid({
-            width: 500, //
-            height: 700,
-            cellWidth: 70,
-            cellHeight: 60,
+        describe('that leave space for gutters', () => {
+          it('calculates rows, columns and gutters', () => {
+            const instance = createGrid({
+              width: 500, //
+              height: 700,
+              cellWidth: 70,
+              cellHeight: 60,
+            });
+            expect(instance.columns).toEqual(7);
+            expect(instance.rows).toEqual(11);
+            expect(instance.gutterWidth).toBeCloseTo(1.66666, 4);
+            expect(instance.gutterHeight).toEqual(4);
           });
-          expect(instance.columns).toEqual(7);
-          expect(instance.rows).toEqual(11);
-          expect(instance.gutterWidth).toBeCloseTo(1.66666, 4);
-          expect(instance.gutterHeight).toEqual(4);
         });
       });
 
-      describe('with dimensions, columns, rows, valid cellWidth and valid cellHeight', () => {
-        it('calculates gutters', () => {
+      describe('with grid dimensions and cell dimensions', () => {
+        it('calculates dimensions', () => {
           const instance = createGrid({
+            cellWidth: 100,
+            cellHeight: 50,
+            rows: 5,
             columns: 10,
-            rows: 8,
-            cellWidth: 40,
-            cellHeight: 85,
           });
-          expect(instance.width).toBe(400);
-          expect(instance.height).toBe(680);
+          expect(instance.width).toEqual(1000);
+          expect(instance.height).toEqual(250);
+          expect(instance.gutterWidth).toEqual(0);
+          expect(instance.gutterHeight).toEqual(0);
+        });
+      });
+
+      describe('with grid dimensions, cell dimensions and gutters', () => {
+        it('calculates dimensions', () => {
+          const instance = createGrid({
+            cellWidth: 100,
+            cellHeight: 50,
+            rows: 5,
+            columns: 10,
+            gutter: 10,
+          });
+          expect(instance.width).toEqual(1090);
+          expect(instance.height).toEqual(290);
         });
       });
     });
@@ -311,19 +340,19 @@ describe('grid', () => {
             rows: 13,
           });
           expect(() => instance.regionForCellAt()).toThrowError(
-            INVALID_PARAMS_TO_CELL_AT_MESSAGE
+            INVALID_CELL_LOCATION_MESSAGE
           );
 
           expect(() => instance.regionForCellAt(11)).toThrowError(
-            INVALID_PARAMS_TO_CELL_AT_MESSAGE
+            INVALID_CELL_LOCATION_MESSAGE
           );
 
           expect(() => instance.regionForCellAt('sss', 33)).toThrowError(
-            INVALID_PARAMS_TO_CELL_AT_MESSAGE
+            INVALID_CELL_LOCATION_MESSAGE
           );
 
           expect(() => instance.regionForCellAt(33, 'sss')).toThrowError(
-            INVALID_PARAMS_TO_CELL_AT_MESSAGE
+            INVALID_CELL_LOCATION_MESSAGE
           );
         });
       });
@@ -387,21 +416,13 @@ describe('grid', () => {
               rows: 13,
             });
 
-            expect(() => instance.regionForColumns()).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            const invalidParams = [null, '4', 13, -4];
 
-            expect(() => instance.regionForColumns('2')).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
-
-            expect(() => instance.regionForColumns(13)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
-
-            expect(() => instance.regionForColumns(-4)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            for (const param of invalidParams) {
+              expect(() => instance.regionForColumns(param)).toThrowError(
+                INVALID_COLUMN_INDEX
+              );
+            }
           });
         });
 
@@ -414,17 +435,13 @@ describe('grid', () => {
               rows: 13,
             });
 
-            expect(() => instance.regionForColumns(2, '4')).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            const invalidParams = ['4', 13, -4];
 
-            expect(() => instance.regionForColumns(2, 13)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
-
-            expect(() => instance.regionForColumns(-4)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            for (const param of invalidParams) {
+              expect(() => instance.regionForColumns(2, param)).toThrowError(
+                INVALID_COLUMN_INDEX
+              );
+            }
           });
         });
 
@@ -477,21 +494,13 @@ describe('grid', () => {
               rows: 10,
             });
 
-            expect(() => instance.regionForRows()).toThrowError(
-              INVALID_ROW_INDEX
-            );
+            const invalidParams = [null, '2', 11, -4];
 
-            expect(() => instance.regionForRows('2')).toThrowError(
-              INVALID_ROW_INDEX
-            );
-
-            expect(() => instance.regionForRows(11)).toThrowError(
-              INVALID_ROW_INDEX
-            );
-
-            expect(() => instance.regionForRows(-4)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            for (const param of invalidParams) {
+              expect(() => instance.regionForRows(param)).toThrowError(
+                INVALID_ROW_INDEX
+              );
+            }
           });
         });
 
@@ -504,17 +513,13 @@ describe('grid', () => {
               rows: 10,
             });
 
-            expect(() => instance.regionForRows(2, '4')).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            const invalidParams = ['4', 15, -4];
 
-            expect(() => instance.regionForRows(2, 13)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
-
-            expect(() => instance.regionForRows(-4)).toThrowError(
-              INVALID_COLUMN_INDEX
-            );
+            for (const param of invalidParams) {
+              expect(() => instance.regionForRows(2, param)).toThrowError(
+                INVALID_ROW_INDEX
+              );
+            }
           });
         });
 

@@ -18,7 +18,7 @@ const validateArgs = (width, height, aspectRatio) => {
 
   if (height && !isNumber(height)) throwInvalidParamError('height', height);
 
-  if (aspectRatio && !isPositiveNumber(aspectRatio))
+  if (isNumber(aspectRatio) && !isPositiveNumber(aspectRatio))
     throwInvalidParamError('aspectRatio', aspectRatio);
 
   // Validate we have the params we need

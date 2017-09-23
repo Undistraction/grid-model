@@ -5,6 +5,8 @@ describe('point', () => {
     it('should throw an error', () => {
       expect(() => createPoint()).toThrowError(INVALID_PARAMS_MESSAGE);
       expect(() => createPoint(4)).toThrowError(INVALID_PARAMS_MESSAGE);
+      expect(() => createPoint(4, '5')).toThrowError(INVALID_PARAMS_MESSAGE);
+      expect(() => createPoint('5', 4)).toThrowError(INVALID_PARAMS_MESSAGE);
     });
   });
 
