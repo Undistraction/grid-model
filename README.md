@@ -43,6 +43,13 @@ This library contains a few objects you need to understand.
 - `dimensions` represents an area in 2D space within the grid.
 - `region` represents location and dimensions of a part of the grid encompassing one or more cells.
 
+In the event that you supply parameters that can't be reconciled into a valid grid, it will error. It will not be able to reconcile the params if:
+
+- You don't give it enough information about the grid
+- You give it conflicting params that can't be reconciled.
+
+For example, if you just supply a `width` and `height`, there is no way it can know how many rows and columns you want, but if you supply a `cellWidth` and a `cellHeight` alongside, it can calculate the number of rows, columns and gutters for a valid grid. An example of conflicting params would be if you supplied `width`, `columns` and `cellWidth` which didn't correlate, for example if the `width` was 100, `columns` was 10 and `cellWidth` was 20. In this instance you could drop the `width` and let it be calculated from the `columns` and `cellWidth`, drop the `columns` and let it be calculated from the `width` and `cellWidth` or drop the `cellWidth` and let it be calculated from the `width` and `columns`.
+
 Create a grid:
 
 ```
