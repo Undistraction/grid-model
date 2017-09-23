@@ -23,8 +23,7 @@ const createIterator = grid => {
       x += 1;
     }
     return {
-      x: thisX,
-      y: thisY,
+      value: grid.regionForCellAt(thisX, thisY),
       done: false,
     };
   };
