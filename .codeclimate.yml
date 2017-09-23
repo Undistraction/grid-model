@@ -3,4 +3,5 @@ engines:
     enabled: true
 
 exclude_paths:
-- "lib/index.js"
+- "lib/"
+- "**.test.js"
