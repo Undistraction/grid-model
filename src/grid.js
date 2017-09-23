@@ -89,13 +89,10 @@ const validateParams = (
   cellWidth,
   cellHeight
 ) => {
-  // // Without columns we must have a cellWidth to derive the
-  // if (
-  //   (!isNumber(columns) && !isNumber(cellWidth)) ||
-  //   (!isNumber(rows) && !isNumber(cellHeight))
-  // ) {
-  //   throwError(INVALID_PARAMS_MESSAGE);
-  // }
+  // Zero values aren't valid
+  if (columns === 0 || rows === 0) {
+    throwError(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
+  }
 
   // Guard against cellWidth or cellHeight that would break grid;
   if (
@@ -203,10 +200,6 @@ const calcualteGridDimensions = (
   cellWidth,
   cellHeight
 ) => {
-  if (columns === 0 || rows === 0) {
-    throwError(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
-  }
-
   const c = isNumber(columns)
     ? columns
     : canDeriveColumns(dimensions.width, cellWidth) &&
