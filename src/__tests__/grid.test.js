@@ -220,7 +220,7 @@ describe('grid', () => {
       });
     });
 
-    describe('valid dimensions and cellDimensions', () => {
+    describe('dimensions and cellDimensions', () => {
       it('derives a single cell grid', () => {
         const instance = createGrid({
           width: 100,
@@ -233,7 +233,7 @@ describe('grid', () => {
       });
     });
 
-    describe('valid dimensions and gridDimensions with gutter', () => {
+    describe('dimensions and gridDimensions with gutter', () => {
       // Gutter value shouldn't effect cellWidth or cellHeight of single row / column grid
       it("gutter doesn't effect cellWiidth or cellHeight", () => {
         const instance = createGrid({
@@ -295,6 +295,8 @@ describe('grid', () => {
         });
 
         it('calcualtes the gutter width', () => {
+          expect(instance.cellWidth).toEqual(20);
+          expect(instance.cellHeight).toBeCloseTo(44, 4);
           expect(instance.gutterWidth).toEqual(100);
           expect(instance.gutterHeight).toEqual(7);
         });
