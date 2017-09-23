@@ -1,4 +1,7 @@
-# README
+# GRID MODEL
+
+![alt text](https://dl.dropbox.com/s/go16bsn4aow19gj/grid-model-logo.png?dl=0)
+
 
 This project is a simple library to model a grid and access information about the cells within it. 
 
