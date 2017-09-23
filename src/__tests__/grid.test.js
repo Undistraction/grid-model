@@ -61,21 +61,18 @@ describe('grid', () => {
     });
 
     describe('with cellDimensions that conflict with dimensions and grid dimensions', () => {
-      const instance = createGrid({
-        width: 500,
-        height: 700,
-        columns: 5,
-        rows: 14,
-        cellWidth: 20,
-        cellHeight: 44,
-        gutter: 50,
-      });
-
-      console.log(instance.gutterWidth);
-      console.log(instance.gutterHeight);
-
       it('throws errror', () => {
-        expect(() => 1 + 7).toThrowError(CONFLICTING_PARAMS_MESSAGE);
+        expect(() =>
+          createGrid({
+            width: 500,
+            height: 700,
+            columns: 5,
+            rows: 14,
+            cellWidth: 20,
+            cellHeight: 44,
+            gutter: 250,
+          })
+        ).toThrowError(CONFLICTING_PARAMS_MESSAGE);
       });
     });
   });

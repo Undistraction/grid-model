@@ -108,14 +108,14 @@ const canDeriveWidth = (cellHeight, rows) =>
   !!(isNumber(cellHeight) && isNumber(rows));
 const canDeriveHeight = (cellWidth, columns) =>
   !!(isNumber(cellWidth) && isNumber(columns));
-const deriveHeight = (rows, cellHeight, gutterHeight) =>
+const deriveHeight = (rows, cellHeight, gutterHeight = 0) =>
   cellHeight * rows + gutterHeight * (rows - 1);
-const deriveWidth = (columns, cellWidth, gutterWidth) =>
+const deriveWidth = (columns, cellWidth, gutterWidth = 0) =>
   cellWidth * columns + gutterWidth * (columns - 1);
 
-const deriveCellWidth = (width, gutterWidth, columns) =>
+const deriveCellWidth = (width, gutterWidth = 0, columns) =>
   (width - gutterWidth * (columns - 1)) / columns;
-const deriveCellHeight = (height, gutterHeight, rows) =>
+const deriveCellHeight = (height, gutterHeight = 0, rows) =>
   (height - gutterHeight * (rows - 1)) / rows;
 
 const canDeriveColumns = (width, cellWidth) =>
@@ -248,23 +248,28 @@ const calculateGutterDimensions = (
   gridDimensions,
   cellDimensions
 ) => {
-  let width = gutterWidth;
-  let height = gutterHeight;
-
   const remainingHSpace =
     dimensions.width - gridDimensions.width * cellDimensions.width;
   const remainingVSpace =
     dimensions.height - gridDimensions.height * cellDimensions.height;
 
-  const hGutter = remainingHSpace / (gridDimensions.width - 1);
-  const vGutter = remainingVSpace / (gridDimensions.height - 1);
+  const calculatedGutterWidth = remainingHSpace / (gridDimensions.width - 1);
+  const calcualtedGutterHeight = remainingVSpace / (gridDimensions.height - 1);
 
-  width = hGutter;
-  height = vGutter;
+  if (
+    (gridDimensions.width > 1 &&
+      isNumber(gutterWidth) &&
+      gutterWidth !== calculatedGutterWidth) ||
+    (gridDimensions.height > 1 &&
+      isNumber(gutterHeight) &&
+      gutterHeight !== calcualtedGutterHeight)
+  ) {
+    throw new Error(CONFLICTING_PARAMS_MESSAGE);
+  }
 
   return createDimensions({
-    width,
-    height,
+    width: calculatedGutterWidth,
+    height: calcualtedGutterHeight,
   });
 };
 
@@ -300,8 +305,9 @@ const createGrid = (
   );
 
   // Transfer gutter value to gutterWidth and gutterHeight if they aren't set
-  if (!isNumber(gutterWidth)) gutterWidth = gutter || 0;
-  if (!isNumber(gutterHeight)) gutterHeight = gutter || 0;
+
+  if (!isNumber(gutterWidth) && isNumber(gutter)) gutterWidth = gutter;
+  if (!isNumber(gutterHeight) && isNumber(gutter)) gutterHeight = gutter;
 
   const dimensions = calculateDimensions(
     width,
