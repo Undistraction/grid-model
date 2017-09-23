@@ -24,7 +24,7 @@ const calculateBounds = (origin, dimensions) => ({
   left: origin.x,
 });
 
-const region = (origin, dimensions) => {
+const createRegion = (origin, dimensions) => {
   validateArgs(origin, dimensions);
 
   const { top, right, bottom, left } = calculateBounds(origin, dimensions);
@@ -49,4 +49,4 @@ const region = (origin, dimensions) => {
   };
 };
 
-export default region;
+export default createRegion;
