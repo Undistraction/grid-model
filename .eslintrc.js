@@ -23,6 +23,7 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-double'],
     'comma-dangle': ['error', 'always-multiline'],
     'valid-jsdoc': ['error'],
+    'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
   },
   settings: {
     'import/resolver': {
