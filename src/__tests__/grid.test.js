@@ -2,9 +2,10 @@ import createGrid, {
   INVALID_PARAMS_MESSAGE,
   INVALID_CELL_LOCATION_MESSAGE,
   INVALID_CELL_INDEX_MESSAGE,
-  INVALID_COLUMN_INDEX,
-  INVALID_ROW_INDEX,
+  INVALID_COLUMN_INDEX_MESSAGE,
+  INVALID_ROW_INDEX_MESSAGE,
   CONFLICTING_PARAMS_MESSAGE,
+  ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE,
 } from '../grid';
 
 describe('grid', () => {
@@ -73,6 +74,19 @@ describe('grid', () => {
             gutter: 250,
           })
         ).toThrowError(CONFLICTING_PARAMS_MESSAGE);
+      });
+    });
+
+    describe('with column value of zero', () => {
+      it('throws errror', () => {
+        expect(() =>
+          createGrid({
+            width: 500,
+            height: 700,
+            columns: 0,
+            rows: 14,
+          })
+        ).toThrowError(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
       });
     });
   });
@@ -475,7 +489,7 @@ describe('grid', () => {
 
             for (const param of invalidParams) {
               expect(() => instance.regionForColumns(param)).toThrowError(
-                INVALID_COLUMN_INDEX
+                INVALID_COLUMN_INDEX_MESSAGE
               );
             }
           });
@@ -494,7 +508,7 @@ describe('grid', () => {
 
             for (const param of invalidParams) {
               expect(() => instance.regionForColumns(2, param)).toThrowError(
-                INVALID_COLUMN_INDEX
+                INVALID_COLUMN_INDEX_MESSAGE
               );
             }
           });
@@ -553,7 +567,7 @@ describe('grid', () => {
 
             for (const param of invalidParams) {
               expect(() => instance.regionForRows(param)).toThrowError(
-                INVALID_ROW_INDEX
+                INVALID_ROW_INDEX_MESSAGE
               );
             }
           });
@@ -572,7 +586,7 @@ describe('grid', () => {
 
             for (const param of invalidParams) {
               expect(() => instance.regionForRows(2, param)).toThrowError(
-                INVALID_ROW_INDEX
+                INVALID_ROW_INDEX_MESSAGE
               );
             }
           });

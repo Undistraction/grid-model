@@ -20,9 +20,12 @@ export const INVALID_CELL_INDEX_MESSAGE = 'The cell index supplied was invalid';
 export const INVALID_CELL_LOCATION_MESSAGE =
   'You must supply an x and y position to cellAt()';
 
-export const INVALID_COLUMN_INDEX = 'The column index was invalid';
+export const ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE =
+  'Zero is not a valid value for rows or columns';
 
-export const INVALID_ROW_INDEX = 'The column index was invalid';
+export const INVALID_COLUMN_INDEX_MESSAGE = 'The column index was invalid';
+
+export const INVALID_ROW_INDEX_MESSAGE = 'The column index was invalid';
 
 // -----------------------------------------------------------------------------
 // Utility
@@ -199,6 +202,10 @@ const calcualteGridDimensions = (
   cellWidth,
   cellHeight
 ) => {
+  if (columns === 0 || rows === 0) {
+    throw new Error(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
+  }
+
   const c = isNumber(columns)
     ? columns
     : canDeriveColumns(dimensions.width, cellWidth) &&
@@ -207,6 +214,7 @@ const calcualteGridDimensions = (
     ? rows
     : canDeriveRows(dimensions.height, cellHeight) &&
       deriveRows(dimensions.height, cellHeight);
+
   if (!r || !c) {
     throw new Error(INVALID_PARAMS_MESSAGE);
   }
@@ -383,7 +391,7 @@ const createGrid = (
       !isPositiveInteger(start) ||
       !isValidColumnIndex(start, gridDimensions.width)
     ) {
-      throw new Error(INVALID_COLUMN_INDEX);
+      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     // Validate end
@@ -392,7 +400,7 @@ const createGrid = (
       (!isPositiveInteger(end) ||
         !isValidColumnIndex(end, gridDimensions.width))
     ) {
-      throw new Error(INVALID_COLUMN_INDEX);
+      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     const startCell = regionForCellAt(start, 0);
@@ -411,7 +419,7 @@ const createGrid = (
       !isPositiveInteger(start) ||
       !isValidRowIndex(start, gridDimensions.height)
     ) {
-      throw new Error(INVALID_COLUMN_INDEX);
+      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     // Validate end
@@ -419,7 +427,7 @@ const createGrid = (
       !isNil(end) &&
       (!isPositiveInteger(end) || !isValidRowIndex(end, gridDimensions.height))
     ) {
-      throw new Error(INVALID_COLUMN_INDEX);
+      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     const startCell = regionForCellAt(0, start);
