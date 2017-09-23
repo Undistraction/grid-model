@@ -249,6 +249,40 @@ describe('grid', () => {
         });
       });
 
+      describe('with dimensions, grid dimensions and cellDimensions', () => {
+        const instance = createGrid({
+          width: 500,
+          height: 707,
+          columns: 5,
+          rows: 14,
+          cellWidth: 20,
+          cellHeight: 44,
+        });
+
+        it('calcualtes the gutter width', () => {
+          expect(instance.gutterWidth).toEqual(100);
+          expect(instance.gutterHeight).toEqual(7);
+        });
+      });
+
+      describe('with dimensions, grid dimensions, gutters and cellDimensions', () => {
+        it('calculates cellWidth and cellHeight', () => {
+          const instance = createGrid({
+            width: 500,
+            height: 706,
+            columns: 5,
+            cellHeight: 46,
+            cellWdith: 84,
+            rows: 11,
+            gutter: 20,
+          });
+          expect(instance.cellWidth).toBeCloseTo(84);
+          expect(instance.cellHeight).toBeCloseTo(46);
+          expect(instance.gutterWidth).toBeCloseTo(20, 4);
+          expect(instance.gutterHeight).toBeCloseTo(20, 4);
+        });
+      });
+
       describe('with dimensions and cell dimensions', () => {
         describe('that leave no remaining space for gutters', () => {
           it('calculates rows and columns', () => {

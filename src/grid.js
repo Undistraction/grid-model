@@ -3,6 +3,7 @@ import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
 import createRegion from './region';
 import createPoint from './point';
+import createIterator from './iterator';
 
 // -----------------------------------------------------------------------------
 // Error Messages
@@ -469,6 +470,10 @@ const createGrid = (
     regionForCellAt,
     regionForColumns,
     regionForRows,
+    // Bind to this object
+    getIterator() {
+      return createIterator(this);
+    },
   };
 };
 
