@@ -7,9 +7,5 @@ ratings:
     - "src/"
 
 exclude_paths:
-- "lib/"
-<<<<<<< HEAD
-- "**.test.js"
-=======
-- "**.test.js"
->>>>>>> Update clode climage ignore list
+  - "lib/"
+  - "**.test.js"
