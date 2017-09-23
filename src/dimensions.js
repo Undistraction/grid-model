@@ -1,16 +1,17 @@
 import { isNumber } from 'lodash-es';
 import { isPositiveNumber } from './validations';
+import { throwError } from './errors';
 
 export const INCORRECT_NUMBER_OF_PARAMS_MESSAGE =
   'You must supply exactly two of: width, height, aspectRatio';
 export const INVALID_PARAMS_MESSAGE = 'Parameter was invalid:';
 
 const throwInvalidParamError = (param, value) => {
-  throw new Error(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
+  throwError(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
 };
 
 const throwIncorrectNumberOfParamsError = () => {
-  throw new Error(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
+  throwError(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
 };
 
 const validateArgs = (width, height, aspectRatio) => {

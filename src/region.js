@@ -1,11 +1,12 @@
 import createPoint from './point';
+import { throwError } from './errors';
 
 export const INVALID_PARAMS_ERROR_MESSAGE =
   'You must supply a point object and size object';
 
 const validateArgs = (origin, dimensions) => {
   if (!origin || !dimensions) {
-    throw new Error(INVALID_PARAMS_ERROR_MESSAGE);
+    throwError(INVALID_PARAMS_ERROR_MESSAGE);
   }
   return { validatedOrigin: origin, validatedDimensions: dimensions };
 };

@@ -4,6 +4,7 @@ import createDimensions from './dimensions';
 import createRegion from './region';
 import createPoint from './point';
 import createIterator from './iterator';
+import { throwError } from './errors';
 
 // -----------------------------------------------------------------------------
 // Error Messages
@@ -93,7 +94,7 @@ const validateParams = (
   //   (!isNumber(columns) && !isNumber(cellWidth)) ||
   //   (!isNumber(rows) && !isNumber(cellHeight))
   // ) {
-  //   throw new Error(INVALID_PARAMS_MESSAGE);
+  //   throwError(INVALID_PARAMS_MESSAGE);
   // }
 
   // Guard against cellWidth or cellHeight that would break grid;
@@ -102,7 +103,7 @@ const validateParams = (
     (isNumber(rows) && isNumber(cellHeight) && isNumber(height))
   ) {
     if (columns * cellWidth > width || rows * cellHeight > height) {
-      throw new Error(CONFLICTING_PARAMS_MESSAGE);
+      throwError(CONFLICTING_PARAMS_MESSAGE);
     }
   }
 };
@@ -189,7 +190,7 @@ const calculateDimensions = (
 
   // If we don't have at least two params, throw an Error.
   if (validParamCount([width, height, aspectRatio]) < 2) {
-    throw new Error(INVALID_PARAMS_MESSAGE);
+    throwError(INVALID_PARAMS_MESSAGE);
   }
 
   return createDimensions({ width, height, aspectRatio });
@@ -203,7 +204,7 @@ const calcualteGridDimensions = (
   cellHeight
 ) => {
   if (columns === 0 || rows === 0) {
-    throw new Error(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
+    throwError(ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE);
   }
 
   const c = isNumber(columns)
@@ -216,7 +217,7 @@ const calcualteGridDimensions = (
       deriveRows(dimensions.height, cellHeight);
 
   if (!r || !c) {
-    throw new Error(INVALID_PARAMS_MESSAGE);
+    throwError(INVALID_PARAMS_MESSAGE);
   }
 
   const rowParts = r.toString().split('.');
@@ -272,7 +273,7 @@ const calculateGutterDimensions = (
       isNumber(gutterHeight) &&
       gutterHeight !== calcualtedGutterHeight)
   ) {
-    throw new Error(CONFLICTING_PARAMS_MESSAGE);
+    throwError(CONFLICTING_PARAMS_MESSAGE);
   }
 
   return createDimensions({
@@ -361,14 +362,14 @@ const createGrid = (
 
   const regionForCellAt = (x, y) => {
     if (!isNumber(x) || !isNumber(y)) {
-      throw new Error(INVALID_CELL_LOCATION_MESSAGE);
+      throwError(INVALID_CELL_LOCATION_MESSAGE);
     }
 
     if (
       !isValidColumnIndex(x, gridDimensions.width) ||
       !isValidRowIndex(y, gridDimensions.height)
     ) {
-      throw new Error(INVALID_CELL_INDEX_MESSAGE);
+      throwError(INVALID_CELL_INDEX_MESSAGE);
     }
 
     return createRegion(
@@ -391,7 +392,7 @@ const createGrid = (
       !isPositiveInteger(start) ||
       !isValidColumnIndex(start, gridDimensions.width)
     ) {
-      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
+      throwError(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     // Validate end
@@ -400,7 +401,7 @@ const createGrid = (
       (!isPositiveInteger(end) ||
         !isValidColumnIndex(end, gridDimensions.width))
     ) {
-      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
+      throwError(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     const startCell = regionForCellAt(start, 0);
@@ -419,7 +420,7 @@ const createGrid = (
       !isPositiveInteger(start) ||
       !isValidRowIndex(start, gridDimensions.height)
     ) {
-      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
+      throwError(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     // Validate end
@@ -427,7 +428,7 @@ const createGrid = (
       !isNil(end) &&
       (!isPositiveInteger(end) || !isValidRowIndex(end, gridDimensions.height))
     ) {
-      throw new Error(INVALID_COLUMN_INDEX_MESSAGE);
+      throwError(INVALID_COLUMN_INDEX_MESSAGE);
     }
 
     const startCell = regionForCellAt(0, start);

@@ -1,10 +1,11 @@
 import { isNumber } from 'lodash-es';
+import { throwError } from './errors';
 
 export const INVALID_PARAMS_MESSAGE = 'Params were invalid';
 
 const validateArgs = (x, y) => {
   if (!isNumber(x) || !isNumber(y)) {
-    throw new Error(INVALID_PARAMS_MESSAGE);
+    throwError(INVALID_PARAMS_MESSAGE);
   }
   return { validatedX: x, validatedY: y };
 };
