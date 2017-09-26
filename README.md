@@ -1,9 +1,19 @@
 ![Grid Model Logo](https://dl.dropbox.com/s/g0pv4jk9a4q2s50/grid-model-logo.png?dl=0)
 
+# Grid Model
 
 Grid Model is a simple library to model a grid and access information about the cells within it. 
 
-## Build 
+## Quickstart
+
+### Docs
+
+View the docs in your default browser using:
+```
+yarn run docs
+```
+
+### Build 
 
 The project is built using rollup using the config file `rollup.config.js`. It is transpiled using babel.
 
@@ -11,14 +21,14 @@ The project is built using rollup using the config file `rollup.config.js`. It i
 yarn run build
 ```
 
-## Test
+### Test
 
 Test the project using jest
 ```
 yarn run test
 ```
 
-## Release
+### Release
 
 Bump the version (patch, minor, major, prepatch, preminor, premajor, prerelease)
 ```
@@ -30,10 +40,6 @@ Publish to NPM:
 npm publish
 ```
 
-## Params
-
-The grid supports as many combinations of parameters as possible, calculating the missing params from those that were supplies. In the event conflicting params are supplied it will drop the most sensible param and use the others.
-In the event it doesn't have enough params to calculate the missing params, it will throw an error. It doesn't support situations where the width of the columns or the height of the rows is greater than the width or height of the grid and will throw an error in this situation.
 
 ## Usage
 
