@@ -1,7 +1,13 @@
-import grid from './grid';
-import region from './region';
-import point from './point';
-import dimensions from './dimensions';
-import iterator from './iterator';
+import createGrid from './grid';
+import createRegion from './region';
+import createPoint from './point';
+import createDimensions from './dimensions';
+import createIterator from './iterator';
 
-export { grid, region, point, dimensions, iterator };
+export {
+  createGrid,
+  createRegion,
+  createPoint,
+  createDimensions,
+  createIterator,
+};
