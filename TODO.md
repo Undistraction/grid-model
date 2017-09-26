@@ -9,3 +9,5 @@
 - Clean up examples
 - Create illustrations for examaple
 - Grid Math
+- Proper aspect ratios
+- Grid 'Info' printout

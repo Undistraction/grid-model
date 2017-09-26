@@ -65,6 +65,14 @@ Note: The numeric values for `width` `height`, `cellWidth`, `cellHeight`, `gutte
 
 ### Example
 
+The following example can be run using:
+
+```
+yarn run example
+```
+
+If you want to play with other values, the src can be found in `example/example.js`.
+
 For this example we'll use a 6 * 8 grid with a 3:4 aspect ratio with even gutters and (almost) square cells:
 
 Create a grid:
@@ -110,10 +118,10 @@ grid.matrix.height // 8
 The grid's cell dimensions are the with and height of the cells within it. All cells in a grid have the same width and height.
 
 ```
-grid.cellWidth // 40
-grid.cellHeight // 39.5
-grid.cellDimensions.width // 40
-grid.cellDimensions.height // 39.5
+grid.cellWidth // 45
+grid.cellHeight // 44.75
+grid.cellDimensions.width // 45
+grid.cellDimensions.height // 44.75
 ```
 
 #### Gutter Dimensions
@@ -142,6 +150,22 @@ grid.cellCount // 48
 
 ### Individual Cells
 
-You can retrieve information about a single cell in the grid using its column and row index.
+You can retrieve information about a single cell in the grid using its column and row index. A call to `regionForCellAt` will return a region object from which you can discover information about the cell.
 
+```
+const region = grid.regionForCellAt(4,5);
+const cellRegion = grid.regionForCellAt(4, 5);
+cellRegion.top // 253.75
+cellRegion.right // 249
+cellRegion.bottom // 298.5
+cellRegion.left // 204
+cellRegion.topLeftPoint.x // 204
+cellRegion.topLeftPoint.y // 253.75
+```
+
+You can also use to the locations of two cells to define a region. The leftmost cell will define the left edge of the region, the rightmost cell the right edge, the topmost cell the top edge and the bottomost cell the bottom edge.
+
+```
+grid.regionForCellsAt(4,5, 5, 7)
+```
 
