@@ -270,12 +270,28 @@ const createTopLeftPointForCell = (
   return createPoint(xPos, yPos);
 };
 
-const calculateDimensions = (
+/**
+ * Save the dimensions of the grid using the explicit values or deriving them
+ * from other values if they were not supplied.
+ * 
+ * @param {number} width The width of the grid. 
+ * @param {number} height The height of the grid.
+ * @param {number} aspectRatio The aspect ratio of the grid.
+ * @param {number} columns The number of columns in the grid.
+ * @param {number} rows The number of rows in the grid.
+ * @param {number} cellWidth The width of cells in the grid.
+ * @param {number} cellHeight The height of cells in the grid.
+ * @param {number} gutterWidth The width of the gutters in the grid.
+ * @param {number} gutterHeight The height of the gutters in the grid.
+ * 
+ * @returns {object} An object representing the dimensions of the grid.
+ */
+const saveDimensions = (
   width,
   height,
   aspectRatio,
-  rows,
   columns,
+  rows,
   cellWidth,
   cellHeight,
   gutterWidth,
@@ -301,7 +317,18 @@ const calculateDimensions = (
   return createDimensions({ width, height, aspectRatio });
 };
 
-const calcualteGridDimensions = (
+/**
+ * Save the grid dimensions using the explicit column and row values or deriving them from other values if they were not supplied.
+ * 
+ * @param {number} columns The number of columns in the grid.
+ * @param {number} rows The number of rows in the grid.
+ * @param {object} dimensions The dimensions of the grid.
+ * @param {number} cellWidth The width of cells in the grid.
+ * @param {number} cellHeight The height of cells in the grid.
+ * 
+ * @returns {object} An object representing the grid dimensions.
+ */
+const saveGridDimensions = (
   columns,
   rows,
   dimensions,
@@ -333,7 +360,20 @@ const calcualteGridDimensions = (
   });
 };
 
-const calculateCellDimensions = (
+/**
+ * Save the cell dimensions using the explicit values or deriving them from
+ * other values if they were not supplied.
+ * 
+ * @param {number} cellWidth The width of cells in the grid.
+ * @param {number} cellHeight The height of cells in the grid.
+ * @param {number} gutterWidth The width of gutters in the grid.
+ * @param {number} gutterHeight The height of gutters in the grid.
+ * @param {object} dimensions The dimensions of the grid.
+ * @param {object} gridDimensions The dimensions of the grid.
+ * 
+ * @returns {object} An object representing the grid dimensions.
+ */
+const saveCellDimensions = (
   cellWidth,
   cellHeight,
   gutterWidth,
@@ -351,7 +391,7 @@ const calculateCellDimensions = (
   return createDimensions({ width, height });
 };
 
-const calculateGutterDimensions = (
+const saveGutterDimensions = (
   gutterWidth,
   gutterHeight,
   dimensions,
@@ -435,19 +475,19 @@ const createGrid = (
   if (!isNumber(gutterWidth) && isNumber(gutter)) gutterWidth = gutter;
   if (!isNumber(gutterHeight) && isNumber(gutter)) gutterHeight = gutter;
 
-  const dimensions = calculateDimensions(
+  const dimensions = saveDimensions(
     width,
     height,
     aspectRatio,
-    rows,
     columns,
+    rows,
     cellWidth,
     cellHeight,
     gutterWidth,
     gutterHeight
   );
 
-  const gridDimensions = calcualteGridDimensions(
+  const gridDimensions = saveGridDimensions(
     columns,
     rows,
     dimensions,
@@ -455,7 +495,7 @@ const createGrid = (
     cellHeight
   );
 
-  const cellDimensions = calculateCellDimensions(
+  const cellDimensions = saveCellDimensions(
     cellWidth,
     cellHeight,
     gutterWidth,
@@ -463,7 +503,7 @@ const createGrid = (
     dimensions,
     gridDimensions
   );
-  const gutterDimensions = calculateGutterDimensions(
+  const gutterDimensions = saveGutterDimensions(
     gutterWidth,
     gutterHeight,
     dimensions,
