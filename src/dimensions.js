@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash-es';
+import { isNumber } from 'lodash';
 import { isPositiveNumber } from './validations';
 import { throwError } from './errors';
 

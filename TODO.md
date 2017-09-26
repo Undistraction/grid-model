@@ -8,3 +8,4 @@
 - Visualise grid
 - Clean up examples
 - Create illustrations for examaple
+- Grid Math

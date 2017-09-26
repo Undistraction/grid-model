@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash-es';
+import { isNumber } from 'lodash';
 import { throwError } from './errors';
 
 export const INVALID_PARAMS_MESSAGE = 'Params were invalid';

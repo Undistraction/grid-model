@@ -25,19 +25,4 @@ module.exports = {
     'valid-jsdoc': ['error'],
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
   },
-  settings: {
-    'import/resolver': {
-      webpack: {
-        config: {
-          resolve: {
-            modules: ['app', 'node_modules'],
-            extensions: ['.js', '.jsx', '.css'],
-            alias: {
-              'component-styles': 'css/components',
-            },
-          },
-        },
-      },
-    },
-  },
 };

@@ -1,4 +1,4 @@
-import _ from 'lodash-es';
+import _ from 'lodash';
 import createIterator, { MISSING_GRID_MESSAGE } from '../iterator';
 import createRegion from '../region';
 import createDimensions from '../dimensions';

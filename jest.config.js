@@ -6,5 +6,4 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.js'],
   coveragePathIgnorePatterns: ['src/index.js'],
   setupFiles: [],
-  transformIgnorePatterns: ['/!node_modules\\/lodash-es/'],
 };
