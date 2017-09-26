@@ -24,9 +24,10 @@ export const INVALID_CELL_LOCATION_MESSAGE =
 export const ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE =
   'Zero is not a valid value for rows or columns';
 
-export const INVALID_COLUMN_INDEX_MESSAGE = 'The column index was invalid';
+export const INVALID_COLUMN_INDEX_MESSAGE =
+  'The column index supplied was invalid';
 
-export const INVALID_ROW_INDEX_MESSAGE = 'The column index was invalid';
+export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 
 // -----------------------------------------------------------------------------
 // Utility
@@ -126,9 +127,9 @@ const canDeriveRows = (height, cellHeight) =>
 const deriveColumns = (width, cellWidth) => width / cellWidth;
 const deriveRows = (height, cellHeight) => height / cellHeight;
 
-const isValidColumnIndex = (columnIndex, totalColumns) =>
+const columnExists = (columnIndex, totalColumns) =>
   columnIndex <= totalColumns - 1;
-const isValidRowIndex = (rowIndex, totalRows) => rowIndex <= totalRows - 1;
+const rowExists = (rowIndex, totalRows) => rowIndex <= totalRows - 1;
 
 const topLeftPointForCell = (
   x,
@@ -275,6 +276,22 @@ const calculateGutterDimensions = (
   });
 };
 
+const validateColumnIndex = (index, total) => {
+  if (
+    isNil(index) ||
+    !isPositiveInteger(index) ||
+    !columnExists(index, total)
+  ) {
+    throwError(INVALID_COLUMN_INDEX_MESSAGE);
+  }
+};
+
+const validateRowIndex = (index, total) => {
+  if (isNil(index) || !isPositiveInteger(index) || !rowExists(index, total)) {
+    throwError(INVALID_ROW_INDEX_MESSAGE);
+  }
+};
+
 // -----------------------------------------------------------------------------
 // Entry
 // -----------------------------------------------------------------------------
@@ -353,22 +370,14 @@ const createGrid = (
 
   const cellCount = () => gridDimensions.area();
 
-  const regionForCellAt = (x, y) => {
-    if (!isNumber(x) || !isNumber(y)) {
-      throwError(INVALID_CELL_LOCATION_MESSAGE);
-    }
-
-    if (
-      !isValidColumnIndex(x, gridDimensions.width) ||
-      !isValidRowIndex(y, gridDimensions.height)
-    ) {
-      throwError(INVALID_CELL_INDEX_MESSAGE);
-    }
+  const regionForCellAt = (columnIndex, rowIndex) => {
+    validateColumnIndex(columnIndex, gridDimensions.width);
+    validateRowIndex(rowIndex, gridDimensions.height);
 
     return createRegion(
       topLeftPointForCell(
-        x,
-        y,
+        columnIndex,
+        rowIndex,
         cellDimensions.width,
         cellDimensions.height,
         gutterDimensions.width,
@@ -378,28 +387,22 @@ const createGrid = (
     );
   };
 
+  const regionForCellsAt = (
+    startColumnIndex,
+    startRowIndex,
+    endColumnIndex,
+    endRowIndex
+  ) => {
+    const startCell = regionForCellAt(startColumnIndex, startRowIndex);
+    const endCell = regionForCellAt(endColumnIndex, endRowIndex);
+    return regionForCells([startCell, endCell]);
+  };
+
   const regionForColumns = (start, end) => {
-    // Validate start
-    if (
-      isNil(start) ||
-      !isPositiveInteger(start) ||
-      !isValidColumnIndex(start, gridDimensions.width)
-    ) {
-      throwError(INVALID_COLUMN_INDEX_MESSAGE);
-    }
-
-    // Validate end
-    if (
-      !isNil(end) &&
-      (!isPositiveInteger(end) ||
-        !isValidColumnIndex(end, gridDimensions.width))
-    ) {
-      throwError(INVALID_COLUMN_INDEX_MESSAGE);
-    }
-
     const startCell = regionForCellAt(start, 0);
+
     const endCell = regionForCellAt(
-      isNumber(end) ? end : start,
+      !isNil(end) ? end : start,
       gridDimensions.height - 1
     );
 
@@ -407,27 +410,11 @@ const createGrid = (
   };
 
   const regionForRows = (start, end) => {
-    // Validate start
-    if (
-      isNil(start) ||
-      !isPositiveInteger(start) ||
-      !isValidRowIndex(start, gridDimensions.height)
-    ) {
-      throwError(INVALID_COLUMN_INDEX_MESSAGE);
-    }
-
-    // Validate end
-    if (
-      !isNil(end) &&
-      (!isPositiveInteger(end) || !isValidRowIndex(end, gridDimensions.height))
-    ) {
-      throwError(INVALID_COLUMN_INDEX_MESSAGE);
-    }
-
     const startCell = regionForCellAt(0, start);
+
     const endCell = regionForCellAt(
       gridDimensions.width - 1,
-      isNumber(end) ? end : start
+      !isNil(end) ? end : start
     );
 
     return regionForCells([startCell, endCell]);
@@ -478,6 +465,7 @@ const createGrid = (
     regionForCellAt,
     regionForColumns,
     regionForRows,
+    regionForCellsAt,
     // Bind to this object
     getIterator() {
       return createIterator(this);
