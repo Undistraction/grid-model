@@ -2,4 +2,9 @@
 - Add point comparison
 - Add dimensions comparison
 
-- Test for 0 values for columns or rows
+- Add customiszable iterator - reverse, random, snake, stripe
+- Add nested grid - assign a grid to cells
+- JS Doc
+- Visualise grid
+- Clean up examples
+- Create illustrations for examaple

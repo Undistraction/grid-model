@@ -16,11 +16,6 @@ export const INVALID_PARAMS_MESSAGE =
 export const CONFLICTING_PARAMS_MESSAGE =
   'You supplied params that cannot be reconciled to a valid grid';
 
-export const INVALID_CELL_INDEX_MESSAGE = 'The cell index supplied was invalid';
-
-export const INVALID_CELL_LOCATION_MESSAGE =
-  'You must supply an x and y position to cellAt()';
-
 export const ZERO_VALUES_FOR_GRID_DIMENSIONS_MESSAGE =
   'Zero is not a valid value for rows or columns';
 
@@ -460,6 +455,9 @@ const createGrid = (
     },
     get gutterHeight() {
       return gutterDimensions.height;
+    },
+    get gutterDimensions() {
+      return gutterDimensions;
     },
     cellCount,
     regionForCellAt,
