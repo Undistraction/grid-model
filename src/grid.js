@@ -318,7 +318,8 @@ const saveDimensions = (
 };
 
 /**
- * Save the grid dimensions using the explicit column and row values or deriving them from other values if they were not supplied.
+ * Save the matrix dimensions using the explicit column and row values or
+ * deriving them from other values if they were not supplied.
  * 
  * @param {number} columns The number of columns in the grid.
  * @param {number} rows The number of rows in the grid.
@@ -328,7 +329,13 @@ const saveDimensions = (
  * 
  * @returns {object} An object representing the grid dimensions.
  */
-const saveMatrix = (columns, rows, dimensions, cellWidth, cellHeight) => {
+const saveMatrixDimensions = (
+  columns,
+  rows,
+  dimensions,
+  cellWidth,
+  cellHeight
+) => {
   const c = isNumber(columns)
     ? columns
     : canDeriveColumns(dimensions.width, cellWidth) &&
@@ -363,7 +370,7 @@ const saveMatrix = (columns, rows, dimensions, cellWidth, cellHeight) => {
  * @param {number} gutterWidth The width of gutters in the grid.
  * @param {number} gutterHeight The height of gutters in the grid.
  * @param {object} dimensions The dimensions of the grid.
- * @param {object} matrixDimensions The dimensions of the grid.
+ * @param {object} matrixDimensions The matrix dimensions of the grid.
  * 
  * @returns {object} An object representing the grid dimensions.
  */
@@ -389,6 +396,18 @@ const saveCellDimensions = (
   return createDimensions({ width, height });
 };
 
+/**
+ * Save the gutter dimensions using the explicit values or deriving them from
+ * other values if they were not supplied.
+ * 
+ * @param {number} gutterWidth The width of gutters in the grid.
+ * @param {number} gutterHeight The height of gutters in the grid.
+ * @param {number} dimensions The dimensions of the grid.
+ * @param {number} matrixDimensions The matrix dimensions of the grid.
+ * @param {number} cellDimensions The cell dimensions of the grtid.
+ * 
+ * @returns {object} An object representing the gutter dimensions of the grid.
+ */
 const saveGutterDimensions = (
   gutterWidth,
   gutterHeight,
@@ -422,6 +441,14 @@ const saveGutterDimensions = (
   });
 };
 
+/**
+ * Validate the supplied column index, making sure it exists in the grid.
+ * 
+ * @param {number} index The (zero based) position of the column in the grid.
+ * @param {number} total The total number of columns in the grid.
+ * 
+ * @returns {boolean} Does the supplied column index exist.
+ */
 const validateColumnIndex = (index, total) => {
   if (
     isNil(index) ||
@@ -432,6 +459,14 @@ const validateColumnIndex = (index, total) => {
   }
 };
 
+/**
+ * Validate the supplied row index, making sure it exists in the grid.
+ * 
+ * @param {number} index The (zero based) position of the row in the grid.
+ * @param {number} total The total number of columns in the grid.
+ * 
+ * @returns {boolean} Does the supplied row index exist.
+ */
 const validateRowIndex = (index, total) => {
   if (isNil(index) || !isPositiveInteger(index) || !rowExists(index, total)) {
     throwError(INVALID_ROW_INDEX_MESSAGE);
@@ -486,7 +521,7 @@ const createGrid = (
     gutterHeight
   );
 
-  const matrixDimensions = saveMatrix(
+  const matrixDimensions = saveMatrixDimensions(
     columns,
     rows,
     dimensions,
@@ -571,42 +606,24 @@ const createGrid = (
   // ---------------------------------------------------------------------------
 
   return {
-    get width() {
-      return dimensions.width;
-    },
-    get height() {
-      return dimensions.height;
-    },
+    width: dimensions.width,
+    height: dimensions.height,
+    aspectRatio: dimensions.aspectRatio,
     get dimensions() {
       return dimensions;
     },
-    get aspectRatio() {
-      return dimensions.aspectRatio;
-    },
-    get rows() {
-      return matrixDimensions.height;
-    },
-    get columns() {
-      return matrixDimensions.width;
-    },
+    rows: matrixDimensions.height,
+    columns: matrixDimensions.width,
     get matrixDimensions() {
       return matrixDimensions;
     },
-    get cellWidth() {
-      return cellDimensions.width;
-    },
-    get cellHeight() {
-      return cellDimensions.height;
-    },
+    cellWidth: cellDimensions.width,
+    cellHeight: cellDimensions.height,
     get cellDimensions() {
       return cellDimensions;
     },
-    get gutterWidth() {
-      return gutterDimensions.width;
-    },
-    get gutterHeight() {
-      return gutterDimensions.height;
-    },
+    gutterWidth: gutterDimensions.width,
+    gutterHeight: gutterDimensions.height,
     get gutterDimensions() {
       return gutterDimensions;
     },
@@ -615,7 +632,7 @@ const createGrid = (
     regionForColumns,
     regionForRows,
     regionForCellsAt,
-    // Bind to this object
+    // Note: Don't use an arrow function as we want it to bind to this object.
     getIterator() {
       return createIterator(this);
     },
