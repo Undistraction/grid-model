@@ -5,6 +5,10 @@
     "test": {
       "presets": ["env"]
     },
+    "example": {
+      "presets": ["env"],
+      "only": ["docs/example/example.js"]
+    },
     // Setup for build
     "development": {
       "presets": [
