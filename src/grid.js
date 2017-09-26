@@ -28,6 +28,13 @@ export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 // Utility
 // -----------------------------------------------------------------------------
 
+/**
+ * Use the extents of all the supplied cells to calculate a region that includes
+ * them all.
+ * 
+ * @param {array} cells An array of cells. 
+ * @returns {object} Region encompassing all supplied cells.
+ */
 const regionForCells = cells => {
   const tlX = cells
     .map(cell => cell.topLeftPoint.x)
@@ -53,15 +60,18 @@ const regionForCells = cells => {
 
 /**
  * 
- * @param {*} params Array of params to check
- * @returns {array} of params that have been set
+ * Filter out any params that haven't been set.  
  * 
- * Filter out any params that haven't been set. 
+ * @param {array} params Array of params to check.
+ * @returns {array} of params that have been set.
  */
 const validParamCount = params =>
   params.filter(param => !isNil(param) && param !== '').length;
 
 /**
+ * 
+ * Validates the params to ensure enough information was supplied to derive a
+ * valid grid.
  * 
  * @param {number} width The width of the grid.
  * @param {number} height The height of the grid.
@@ -70,9 +80,6 @@ const validParamCount = params =>
  * @param {number} columns the number of columns in the grid.
  * @param {number} cellWidth the width of cell in the grid.
  * @param {number} cellHeight the height of a cell in the grid.
- * 
- * Validates the params to ensure enough information was supplied to derive a
- * valid grid.
  * 
  * @returns {null} Nothing is returned.
  */
@@ -101,32 +108,156 @@ const validateParams = (
   }
 };
 
+/**
+ * Check the supplied arguments to see if they can be used to derive a width for
+ * the grid.
+ * 
+ * @param {number} cellHeight The height of a cell in the grid.
+ * @param {number} rows The number of rows in the grid.
+ * 
+ * @returns {boolean} Is there enought information to derive a width for the grid?
+ */
 const canDeriveWidth = (cellHeight, rows) =>
   !!(isNumber(cellHeight) && isNumber(rows));
+
+/**
+ * Check the supplied arguments to see if they can be used to derive a height
+ * for the grid.
+ * 
+ * @param {number} cellWidth The width of a cell in the grid.
+ * @param {number} columns The number of columns in the grid.
+ * 
+ * @returns {boolean} Is there enought information to derive a height for the grid?
+ */
 const canDeriveHeight = (cellWidth, columns) =>
   !!(isNumber(cellWidth) && isNumber(columns));
-const deriveHeight = (rows, cellHeight, gutterHeight = 0) =>
-  cellHeight * rows + gutterHeight * (rows - 1);
+
+/**
+ * Calculate the width of the grid using the supplied values.
+ * 
+ * @param {number} columns The number of columns in the grid.
+ * @param {number} cellWidth The width of a cell in the grid.
+ * @param {number} gutterWidth The width of the gutters in the grid.
+ * 
+ * @returns {number} The calculated width of the grid.
+ */
 const deriveWidth = (columns, cellWidth, gutterWidth = 0) =>
   cellWidth * columns + gutterWidth * (columns - 1);
 
+/**
+ * Calculate the height of the grid using the supplied values.
+ * 
+ * @param {number} rows The number of rows in the grid.
+ * @param {number} cellHeight The height of a cell in the grid.
+ * @param {number} gutterHeight The height of the gutters in the grid.
+ * 
+ * @returns {number} The calculated height of the grid.
+ */
+const deriveHeight = (rows, cellHeight, gutterHeight = 0) =>
+  cellHeight * rows + gutterHeight * (rows - 1);
+
+/**
+ * Calculate the width of the cells in the grid using the supplied values.
+ * 
+ * @param {number} width The height of the grid.
+ * @param {number} gutterWidth The width of a gutter in the grid.
+ * @param {number} columns The number of columns in the grid.
+ * 
+ * @returns {number} The width of cells in the grid.
+ */
 const deriveCellWidth = (width, gutterWidth = 0, columns) =>
   (width - gutterWidth * (columns - 1)) / columns;
+
+/**
+ * Calculate the height of the cells in the grid using the supplied values.
+ * 
+ * @param {number} height The height of the grid.
+ * @param {number} gutterHeight The height of a gutter in the grid.
+ * @param {number} rows The number of rows in the grid.
+ * 
+ * @returns {number} The height of cells in the grid.
+ */
 const deriveCellHeight = (height, gutterHeight = 0, rows) =>
   (height - gutterHeight * (rows - 1)) / rows;
 
+/**
+ * Check the supplied arguments to see if they can be used to derive the number
+ * of columns in the grid. 
+ * @param {number} width The width of the grid.
+ * @param {*} cellWidth The width of a cell in the grid.
+ * 
+ * @returns {boolean} Is there enought information to derive a number of columns
+ * in the grid?
+ */
 const canDeriveColumns = (width, cellWidth) =>
   !!(isNumber(width) && isNumber(cellWidth));
+
+/**
+ * Check the supplied arguments to see if they can be used to derive the number
+ * of rows in the grid. 
+ * @param {number} height The height of the grid.
+ * @param {*} cellHeight The height of a cell in the grid.
+ * 
+ * @returns {boolean} Is there enought information to derive a number of rows
+ * in the grid?
+ */
 const canDeriveRows = (height, cellHeight) =>
   !!(isNumber(height) && isNumber(cellHeight));
+
+/**
+ * Calculate the number of columns in the grid using the supplied argumnets.
+ * 
+ * @param {number} width The width of the grid.
+ * @param {number} cellWidth The width of a cell in the grid.
+ * 
+ * @returns {number} The number of columns in the grid.
+ */
 const deriveColumns = (width, cellWidth) => width / cellWidth;
+
+/**
+ * Calculate the number of rows in the grid using the supplied argumnets.
+ * 
+ * @param {number} height The height of the grid.
+ * @param {number} cellHeight The height of a cell in the grid.
+ * 
+ * @returns {number} The number of rows in the grid.
+ */
 const deriveRows = (height, cellHeight) => height / cellHeight;
 
+/**
+ * Check if a column of the supplied index is valid for this grid.
+ * 
+ * @param {number} columnIndex The (zero-based) position of the column.
+ * @param {number} totalColumns The total number of columns.
+ * 
+ * @returns {boolean} Does a column of the supplied index exist in this grid?
+ */
 const columnExists = (columnIndex, totalColumns) =>
   columnIndex <= totalColumns - 1;
+
+/**
+ * Check if a row of the supplied index is valid for this grid.
+ * 
+ * @param {number} rowIndex The (zero-based) position of the row.
+ * @param {number} totalRows The total number of rows.
+ * 
+ * @returns {boolean} Does a row of the supplied index exist in this grid?
+ */
 const rowExists = (rowIndex, totalRows) => rowIndex <= totalRows - 1;
 
-const topLeftPointForCell = (
+/**
+ * Create a point representing the top left point of the cell.
+ * 
+ * @param {number} x The horizontal position of the cell.
+ * @param {number} y The vertical position of the cell.
+ * @param {number} cellWidth The width of the cell.
+ * @param {number} cellHeight The height of the cell.
+ * @param {number} gutterWidth The width of the gutters.
+ * @param {number} gutterHeight The height of the gutters.
+ * 
+ * @returns {object} a point
+ */
+const createTopLeftPointForCell = (
   x,
   y,
   cellWidth,
@@ -139,25 +270,6 @@ const topLeftPointForCell = (
   return createPoint(xPos, yPos);
 };
 
-// /**
-//  *
-//  * @param {number} width The
-//  * @param {number} height
-//  * @param {number} aspectRatio
-//  * @param {number} rows
-//  * @param {number} columns
-//  * @param {number} cellWidth
-//  * @param {number} cellHeight
-//  * @param {number} gutterWidth
-//  * @param {number} gutterHeight
-//  *
-// * Create a dimensions object to represent the width and height of the grid.
-//    * If this information hasn't been explicly supplied, try to derive that info
-//    * from the other parameters supplied. If there is no way to assertain the
-//    * dimensions, throw an Error.
-//    *
-//    * @returns {object} dimensions
-//  */
 const calculateDimensions = (
   width,
   height,
@@ -370,7 +482,7 @@ const createGrid = (
     validateRowIndex(rowIndex, gridDimensions.height);
 
     return createRegion(
-      topLeftPointForCell(
+      createTopLeftPointForCell(
         columnIndex,
         rowIndex,
         cellDimensions.width,
