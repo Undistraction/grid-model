@@ -1,7 +1,8 @@
 {
   "name": "grid-model",
   "version": "0.0.2",
-  "description": "This project is a simple library to model a grid and access information about the cells within it.",
+  "description":
+    "This project is a simple library to model a grid and access information about the cells within it.",
   "main": "lib/index.js",
   "repository": "git@github.com:Undistraction/grid-model.git",
   "author": "Pedr Browne <pedr.browne@gmail.com>",
@@ -28,6 +29,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
+    "http-server": "^0.10.0",
     "prettier": "^1.7.0",
     "rollup": "^0.49.3",
     "rollup-plugin-babel": "^3.0.2",
@@ -38,6 +40,9 @@
     "build": "NODE_ENV=development rollup --config",
     "test": "NODE_ENV=test jest --config jest.config.js --watch",
     "test:cov": "NODE_ENV=test jest --config jest.config.js --watch --coverage",
-    "docs": "node_modules/documentation/bin/documentation.js serve src/** -f md --shallow & open http://localhost:4001"
+    "docs":
+      "node_modules/documentation/bin/documentation.js serve src/** -f md --shallow & open http://localhost:4001",
+    "example":
+      "yarn run build && NODE_ENV=example node_modules/babel-cli/bin/babel.js docs/example/example.js --out-file docs/example/compiled.js && node docs/example/compiled.js"
   }
 }
