@@ -1,6 +1,5 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
 
 // Trasnpiled using Babel
 export default {
@@ -11,16 +10,10 @@ export default {
   },
   plugins: [
     nodeResolve(),
-    commonjs({
-      namedExports: {
-        // left-hand side can be an absolute path, a path
-        // relative to the current directory, or the name
-        // of a module in node_modules
-        'node_modules/lodash/lodash.js': ['isNumber', 'isNil', 'isInteger'],
-      },
-    }),
+
     babel({
       exclude: 'node_modules/**', // only transpile project source
     }),
   ],
+  external: ['lodash/isNil', 'lodash/isNumber', 'lodash/isInteger'],
 };

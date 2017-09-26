@@ -1,5 +1,5 @@
 {
-  "only": ["src"], // Ignore third party code
+  "only": ["src"], // Ignore third party code,
   "env": {
     // Setup for tests
     "test": {
