@@ -328,13 +328,7 @@ const saveDimensions = (
  * 
  * @returns {object} An object representing the grid dimensions.
  */
-const saveGridDimensions = (
-  columns,
-  rows,
-  dimensions,
-  cellWidth,
-  cellHeight
-) => {
+const saveMatrix = (columns, rows, dimensions, cellWidth, cellHeight) => {
   const c = isNumber(columns)
     ? columns
     : canDeriveColumns(dimensions.width, cellWidth) &&
@@ -369,7 +363,7 @@ const saveGridDimensions = (
  * @param {number} gutterWidth The width of gutters in the grid.
  * @param {number} gutterHeight The height of gutters in the grid.
  * @param {object} dimensions The dimensions of the grid.
- * @param {object} gridDimensions The dimensions of the grid.
+ * @param {object} matrixDimensions The dimensions of the grid.
  * 
  * @returns {object} An object representing the grid dimensions.
  */
@@ -379,14 +373,18 @@ const saveCellDimensions = (
   gutterWidth,
   gutterHeight,
   dimensions,
-  gridDimensions
+  matrixDimensions
 ) => {
   const width = isNumber(cellWidth)
     ? cellWidth
-    : deriveCellWidth(dimensions.width, gutterWidth, gridDimensions.width);
+    : deriveCellWidth(dimensions.width, gutterWidth, matrixDimensions.width);
   const height = isNumber(cellHeight)
     ? cellHeight
-    : deriveCellHeight(dimensions.height, gutterHeight, gridDimensions.height);
+    : deriveCellHeight(
+        dimensions.height,
+        gutterHeight,
+        matrixDimensions.height
+      );
 
   return createDimensions({ width, height });
 };
@@ -395,22 +393,23 @@ const saveGutterDimensions = (
   gutterWidth,
   gutterHeight,
   dimensions,
-  gridDimensions,
+  matrixDimensions,
   cellDimensions
 ) => {
   const remainingHSpace =
-    dimensions.width - gridDimensions.width * cellDimensions.width;
+    dimensions.width - matrixDimensions.width * cellDimensions.width;
   const remainingVSpace =
-    dimensions.height - gridDimensions.height * cellDimensions.height;
+    dimensions.height - matrixDimensions.height * cellDimensions.height;
 
-  const calculatedGutterWidth = remainingHSpace / (gridDimensions.width - 1);
-  const calcualtedGutterHeight = remainingVSpace / (gridDimensions.height - 1);
+  const calculatedGutterWidth = remainingHSpace / (matrixDimensions.width - 1);
+  const calcualtedGutterHeight =
+    remainingVSpace / (matrixDimensions.height - 1);
 
   if (
-    (gridDimensions.width > 1 &&
+    (matrixDimensions.width > 1 &&
       isNumber(gutterWidth) &&
       gutterWidth !== calculatedGutterWidth) ||
-    (gridDimensions.height > 1 &&
+    (matrixDimensions.height > 1 &&
       isNumber(gutterHeight) &&
       gutterHeight !== calcualtedGutterHeight)
   ) {
@@ -487,7 +486,7 @@ const createGrid = (
     gutterHeight
   );
 
-  const gridDimensions = saveGridDimensions(
+  const matrixDimensions = saveMatrix(
     columns,
     rows,
     dimensions,
@@ -501,13 +500,13 @@ const createGrid = (
     gutterWidth,
     gutterHeight,
     dimensions,
-    gridDimensions
+    matrixDimensions
   );
   const gutterDimensions = saveGutterDimensions(
     gutterWidth,
     gutterHeight,
     dimensions,
-    gridDimensions,
+    matrixDimensions,
     cellDimensions
   );
 
@@ -515,11 +514,11 @@ const createGrid = (
   // API
   // ---------------------------------------------------------------------------
 
-  const cellCount = () => gridDimensions.area();
+  const cellCount = () => matrixDimensions.area();
 
   const regionForCellAt = (columnIndex, rowIndex) => {
-    validateColumnIndex(columnIndex, gridDimensions.width);
-    validateRowIndex(rowIndex, gridDimensions.height);
+    validateColumnIndex(columnIndex, matrixDimensions.width);
+    validateRowIndex(rowIndex, matrixDimensions.height);
 
     return createRegion(
       createTopLeftPointForCell(
@@ -550,7 +549,7 @@ const createGrid = (
 
     const endCell = regionForCellAt(
       !isNil(end) ? end : start,
-      gridDimensions.height - 1
+      matrixDimensions.height - 1
     );
 
     return regionForCells([startCell, endCell]);
@@ -560,7 +559,7 @@ const createGrid = (
     const startCell = regionForCellAt(0, start);
 
     const endCell = regionForCellAt(
-      gridDimensions.width - 1,
+      matrixDimensions.width - 1,
       !isNil(end) ? end : start
     );
 
@@ -585,13 +584,13 @@ const createGrid = (
       return dimensions.aspectRatio;
     },
     get rows() {
-      return gridDimensions.height;
+      return matrixDimensions.height;
     },
     get columns() {
-      return gridDimensions.width;
+      return matrixDimensions.width;
     },
-    get gridDimensions() {
-      return gridDimensions;
+    get matrixDimensions() {
+      return matrixDimensions;
     },
     get cellWidth() {
       return cellDimensions.width;

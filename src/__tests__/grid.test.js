@@ -190,9 +190,9 @@ describe('grid', () => {
         });
         expect(instance.columns).toEqual(10);
         expect(instance.rows).toEqual(5);
-        const { gridDimensions } = instance;
-        expect(gridDimensions.width).toEqual(10);
-        expect(gridDimensions.height).toEqual(5);
+        const { matrixDimensions } = instance;
+        expect(matrixDimensions.width).toEqual(10);
+        expect(matrixDimensions.height).toEqual(5);
       });
     });
 
@@ -246,7 +246,7 @@ describe('grid', () => {
     });
 
     describe('single cell grid', () => {
-      describe('dimensions and gridDimensions', () => {
+      describe('dimensions and matrixDimensions', () => {
         it('derives a single cell grid', () => {
           const instance = createGrid({
             width: 100,
@@ -272,7 +272,7 @@ describe('grid', () => {
         });
       });
 
-      describe('dimensions and gridDimensions with gutter', () => {
+      describe('dimensions and matrixDimensions with gutter', () => {
         it("gutter doesn't effect cellWidth or cellHeight", () => {
           const instance = createGrid({
             width: 100,
