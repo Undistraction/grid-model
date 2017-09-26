@@ -40,8 +40,6 @@
     "test": "NODE_ENV=test jest --config jest.config.js --watch",
     "test:cov": "NODE_ENV=test jest --config jest.config.js --watch --coverage",
     "docs":
-      "node_modules/documentation/bin/documentation.js serve src/** -f md --shallow & open http://localhost:4001",
-    "example":
-      "NODE_ENV=test babel docs/example.js --out-file docs/example.compiled.js && node docs/example.compiled.js"
+      "node_modules/documentation/bin/documentation.js serve src/** -f md --shallow & open http://localhost:4001"
   }
 }
