@@ -40,6 +40,10 @@ Publish to NPM:
 npm publish
 ```
 
+## Elements Of A Grid
+
+![Diagram of grid](https://dl.dropbox.com/s/yem64726zrct3l4/diagram.jpg?dl=0)
+
 
 ## Usage
 
@@ -57,65 +61,87 @@ In the event that you supply parameters that can't be reconciled into a valid gr
 
 For example, if you just supply a `width` and `height`, there is no way it can know how many rows and columns you want, but if you supply a `cellWidth` and a `cellHeight` alongside, it can calculate the number of rows, columns and gutters for a valid grid. An example of conflicting params would be if you supplied `width`, `columns` and `cellWidth` which didn't correlate, for example if the `width` was 100, `columns` was 10 and `cellWidth` was 20. In this instance you could drop the `width` and let it be calculated from the `columns` and `cellWidth`, drop the `columns` and let it be calculated from the `width` and `cellWidth` or drop the `cellWidth` and let it be calculated from the `width` and `columns`.
 
+Note: The numeric values for `width` `height`, `cellWidth`, `cellHeight`, `gutterWidth` and `gutterHeight` are unitless. The do not represent any specific unit of measurement like cm or px. It is up to you to either use values that reflect whatever units you are using in your layout, or convert the values of the grid as needed.
+
+### Example
+
+For this example we'll use a 6 * 8 grid with a 3:4 aspect ratio with even gutters and (almost) square cells:
+
 Create a grid:
 
 ```
 const grid = createGrid({
-  width: 800,
-  height: 1200,
-  columns: 10,
-  rows: 12,
-  gutter: 10
+  width: 400,
+  height: 300,
+  columns: 6,
+  rows: 8,
+  gutter: 6
 })
 ```
 
-Retrieve basic information about the grid:
+Retrieve basic information about the grid. Note: for most properties you can either use the property name directly or access through a `dimensions` object.
+
+#### Dimensions
+
+The grid's dimensions are its total height and total width.
 
 ```
-grid.dimensions.width // 800
-grid.dimensions.height // 1200
-grid.gridDimensions.width // 10
-grid.gridDimensions.height // 12
-grid.gutterDimensions.width // 10
-grid.gutterDimensions.height // 10
-grid.cellDimensions.width //
-grid.cellDimensions.height //
+grid.width // 400
+grid.height // 300
+grid.aspectRatio // 0.75
+grid.dimensions.width // 400
+grid.dimensions.height // 300
+grid.dimensions.aspectRatio // 0.75
 ```
 
-So far so meh, but now we can get information about the cells defined by the grid.
+#### Matrix Dimensions
 
-Retrieve the total number of cells:
-
-```
-grid.cellCount // 120
-```
-
-Retrieve information about a particular cell:
+The grid's matrix dimensions are the number of columns and cells it has.
 
 ```
-const cellRegion = grid.regionForCellAt(6, 3)
-cellRegion.dimensions.width //
-cellRegion.dimensions.height //
-cellRegion.topLeftPoint.x //
-cellRegion.bottomRightPoint.y
-cellRegion.top //
-cellRegion.right //
+grid.columns // 6
+grid.rows // 8
+grid.matrix.width // 6
+grid.matrix.height // 8
 ```
 
-Retrieve information about a single row or column:
+#### Cell Dimensions
+
+The grid's cell dimensions are the with and height of the cells within it. All cells in a grid have the same width and height.
 
 ```
-grid.regionForRows(3).dimensions.width
-grid.regionForColumn(6).bottomLeftPoint.x
+grid.cellWidth // 40
+grid.cellHeight // 39.5
+grid.cellDimensions.width // 40
+grid.cellDimensions.height // 39.5
 ```
 
-Or multiple rows or columns:
+#### Gutter Dimensions
+
+The grid's gutter dimensions are the with and height of the gutters throughout the grid. Gutters are the spaces between the cells. The width of the gutters represents the space between columns and the height of the gutters represents the space between rows.
 
 ```
-grid.regionForRows(3, 8).dimensions.width
-grid.regionForColumn(6,10).topRightPoint.x
+grid.gutterWidth // 3
+grid.gutterHeight // 3
+grid.cellDimensions.width // 3
+grid.cellDimensions.height // 3
 ```
 
+### Each of the `dimensions` objects also exposes an area property:
 
+```
+grid.dimensions.area // 120000
+grid.matrix.area // 48
+```
+
+### Retrieve the total number of cells in a grid.
+
+```
+grid.cellCount // 48
+```
+
+### Individual Cells
+
+You can retrieve information about a single cell in the grid using its column and row index.
 
 
