@@ -6,14 +6,28 @@ export const INCORRECT_NUMBER_OF_PARAMS_MESSAGE =
   'You must supply exactly two of: width, height, aspectRatio';
 export const INVALID_PARAMS_MESSAGE = 'Parameter was invalid:';
 
+/**
+ * Throw an error due to params being invalid.
+ * 
+ * @param {string} param The name of the invalid param.
+ * @param {value} value The value of the invalid param.
+ * 
+ * @returns {undefined}
+ */
 const throwInvalidParamError = (param, value) => {
   throwError(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
 };
 
-const throwIncorrectNumberOfParamsError = () => {
-  throwError(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
-};
-
+/**
+ * Validate the supplied arguments. Exactly two values must be supplied. The
+ * third will be calculated.
+ * 
+ * @param {number} width The width.
+ * @param {number} height The height.
+ * @param {number} aspectRatio The aspectRatio.
+ * 
+ * @returns {object} An object containing the validated arguments.
+ */
 const validateArgs = (width, height, aspectRatio) => {
   if (width && !isNumber(width)) throwInvalidParamError('width', width);
 
@@ -24,7 +38,7 @@ const validateArgs = (width, height, aspectRatio) => {
 
   // Validate we have the params we need
   if ([width, height, aspectRatio].filter(x => isNumber(x)).length !== 2) {
-    throwIncorrectNumberOfParamsError();
+    throwError(INCORRECT_NUMBER_OF_PARAMS_MESSAGE);
   }
 
   return {

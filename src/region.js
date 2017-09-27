@@ -4,11 +4,18 @@ import { throwError } from './errors';
 export const INVALID_PARAMS_ERROR_MESSAGE =
   'You must supply a point object and size object';
 
+/**
+ * Validate the supplied arguments.
+ * 
+ * @param {object} origin A point object.
+ * 
+ * @param {any} dimensions A dimensions object.
+ * @returns {undefined}
+ */
 const validateArgs = (origin, dimensions) => {
   if (!origin || !dimensions) {
     throwError(INVALID_PARAMS_ERROR_MESSAGE);
   }
-  return { validatedOrigin: origin, validatedDimensions: dimensions };
 };
 
 /**
@@ -48,6 +55,15 @@ const calculateBounds = (origin, dimensions) => ({
   left: origin.x,
 });
 
+/**
+ * Create a region object, representing a position an dimensions with a
+ * cartesian coordinate sytem.
+ * 
+ * @param {object} origin A point object.
+ * @param {object} dimensions A dimensions object.
+ * 
+ * @returns {object} A region object.
+ */
 const createRegion = (origin, dimensions) => {
   validateArgs(origin, dimensions);
 
