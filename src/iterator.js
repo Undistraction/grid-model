@@ -1,35 +1,27 @@
-export const MISSING_GRID_MESSAGE = 'You must supply a grid';
+export const MISSING_GRID_MESSAGE = '[Grid Iterator] You must supply a grid';
+export const MISSING_STRATEGY_MESSAGE =
+  '[Grid Iterator] You must supply a strategy';
 
+/**
+ * Create an iterator to iterate over the cells of a grid. The iterator will use
+ * the `interatorStrategy` of the grid to decide how to iterate, for example
+ * should it iterate forward or backwards, vertically or horizontally?
+ * 
+ * @param {object} grid Object represeting the grid to iterate over.
+ * 
+ * @returns {object} An iterator object with a single `next` property.
+ */
 const createIterator = grid => {
   if (!grid) {
     throw new Error(MISSING_GRID_MESSAGE);
   }
 
-  let x = 0;
-  let y = 0;
-  const { columns } = grid;
-  const { rows } = grid;
-
-  const next = () => {
-    const thisX = x;
-    const thisY = y;
-
-    if (x === 0 && y === rows) return { done: true };
-
-    if (x + 1 === columns) {
-      x = 0;
-      y += 1;
-    } else {
-      x += 1;
-    }
-    return {
-      value: grid.regionForCellAt(thisX, thisY),
-      done: false,
-    };
-  };
+  if (!grid.iteratorStrategy) {
+    throw new Error(MISSING_STRATEGY_MESSAGE);
+  }
 
   return {
-    next,
+    next: grid.iteratorStrategy(grid.columns, grid.rows),
   };
 };
 
