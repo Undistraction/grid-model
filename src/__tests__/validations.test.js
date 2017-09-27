@@ -8,11 +8,11 @@ describe('validations', () => {
   describe('isPositiveNumber', () => {
     it('should identify a positive number', () => {
       const validValues = [22, 0, 0.3, -0];
-
       for (const value of validValues) {
         expect(isPositiveNumber(value)).toBeTruthy();
       }
     });
+
     it('should identify a non-number or negative number', () => {
       const invalidValues = [-0.1, -1000];
       for (const value of invalidValues) {

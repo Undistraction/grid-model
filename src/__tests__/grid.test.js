@@ -775,10 +775,11 @@ describe('grid', () => {
           rows: 8,
         });
 
-        const cell = instance.getIterator().next().value;
+        const firstCellIndexes = instance.getIterator().next().value;
+        const firstCell = instance.regionForCellAt(...firstCellIndexes);
 
-        expect(cell.topLeftPoint.x).toEqual(0);
-        expect(cell.topLeftPoint.y).toEqual(0);
+        expect(firstCell.topLeftPoint.x).toEqual(0);
+        expect(firstCell.topLeftPoint.y).toEqual(0);
       });
     });
   });

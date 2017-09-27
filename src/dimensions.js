@@ -34,6 +34,17 @@ const validateArgs = (width, height, aspectRatio) => {
   };
 };
 
+/**
+ * Create a dimensions object. Only two of the three possible params can be
+ * supplied. The third will be calculated from the others.
+ * 
+ * @param {object} Object containing params.
+ * @param {number} width The width dimension.
+ * @param {number} height The height dimension.
+ * @param {number} aspectRatio The aspectRatio of the dimensions.
+ * 
+ * @returns {object} A dimensions object.
+ */
 const createDimensions = ({ width, height, aspectRatio }) => {
   // Validate supplied params are valid
   const {
@@ -46,6 +57,11 @@ const createDimensions = ({ width, height, aspectRatio }) => {
   // API
   // ---------------------------------------------------------------------------
 
+  /**
+   * Return the area of the dimensions.
+   * 
+   * @returns {number} The width * the height.
+   */
   const area = () => width * height;
 
   return {

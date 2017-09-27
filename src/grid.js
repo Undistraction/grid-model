@@ -1,6 +1,7 @@
 import { isNumber, isNil } from 'lodash';
 import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
+import { linearHorizontalForwardStrategy } from './iteratorStrategies/linear';
 import createRegion from './region';
 import createPoint from './point';
 import createIterator from './iterator';
@@ -27,6 +28,8 @@ export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 // -----------------------------------------------------------------------------
 // Utility
 // -----------------------------------------------------------------------------
+
+const defaultStrategy = () => linearHorizontalForwardStrategy;
 
 /**
  * Use the extents of all the supplied cells to calculate a region that includes
@@ -636,6 +639,7 @@ const createGrid = (
     getIterator() {
       return createIterator(this);
     },
+    iteratorStrategy: defaultStrategy(),
   };
 };
 
