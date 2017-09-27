@@ -6,6 +6,8 @@ const ERROR_PREFIX = '[Grid Model]';
  * originated from.
  * 
  * @param {string} message The error message.
+ * 
+ * @returns {undefined}
  */
 export const throwError = message => {
   throw new Error(`${ERROR_PREFIX} ${message}`);

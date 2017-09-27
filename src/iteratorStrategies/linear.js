@@ -181,7 +181,8 @@ const lastCellOfPreviousColumn = (columnIndex, totalRows) => [
  * 
  * @param {number} rowIndex The row index.
  * 
- * @returns {array} The indexes of first cell in the row below.
+ * @returns {array} The indexes of first cell in the row below the one with the
+ * supplied index.
  */
 const firstCellOfRowBelow = rowIndex => [
   firstColumn(),
@@ -194,7 +195,8 @@ const firstCellOfRowBelow = rowIndex => [
  * 
  * @param {number} rowIndex The row index.
  * 
- * @returns {array} The indexes of first cell in the row above.
+ * @returns {array} The indexes of first cell in the row above the one with the
+ * supplied index.
  */
 // eslint-disable-next-line no-unused-vars
 const firstCellOfRowAbove = rowIndex => [
@@ -209,7 +211,8 @@ const firstCellOfRowAbove = rowIndex => [
  * @param {number} rowIndex The row index.
  * @param {number} totalColumns The total number of columns.
  * 
- * @returns {array} The indexes of last cell in the row below.
+ * @returns {array} The indexes of last cell in the row below the one with the
+ * supplied index.
  */
 // eslint-disable-next-line no-unused-vars
 const lastCellOfRowBelow = (rowIndex, totalColumns) => [
@@ -224,7 +227,7 @@ const lastCellOfRowBelow = (rowIndex, totalColumns) => [
  * @param {number} rowIndex The row index.
  * @param {number} totalColumns The total number of columns.
  * 
- * @returns {array} The indexes of last cell in the row above.
+ * @returns {array} The indexes of last cell in the row above the one with the supplied index.
  */
 const lastCellOfRowAbove = (rowIndex, totalColumns) => [
   lastColumn(totalColumns),
@@ -245,6 +248,23 @@ const isLastCell = (columnIndex, rowIndex, totalColumns, totalRows) =>
 // Create
 // -----------------------------------------------------------------------------
 
+/**
+ * This function encapsulates the creation of particular kind of strategy - one 
+ * that runs in a linear fashion over the cells. There are four flavours of
+ * linear strategy which are explained in their own docs.
+ * 
+ * @param {function} getStartingCell A function returning the starting cell
+ * indexes.
+ * @param {function} isEndingCell A function returning the ending cell indexes.
+ * @param {function} getNextCell A function returning the next cell of the
+ * iteration.
+ * 
+ * @returns {function} A function to be called by the iterator on each
+ * iteration. The function will return an iteration result that will have a key
+ * of `done` set to either `false` or `true` and a `value` key set to the
+ * indexes of the current cell unless `done` is `true` in which case it will be
+ * empty.
+ */
 const createLinearStrategy = (getStartingCell, isEndingCell, getNextCell) => (
   totalColumns,
   totalRows
@@ -268,7 +288,6 @@ const createLinearStrategy = (getStartingCell, isEndingCell, getNextCell) => (
 
     return result;
   };
-
   return next;
 };
 
@@ -276,6 +295,12 @@ const createLinearStrategy = (getStartingCell, isEndingCell, getNextCell) => (
 // Linear Strategies
 // -----------------------------------------------------------------------------
 
+/**
+ * The linearHorizontalForwardStrategy moves through cells from left to right,
+ * starting with the top-right cell. When it reaches the last cell in a row, it
+ * moves to the first cell of the next row, and so on until there are no more
+ * rows.
+ */
 export const linearHorizontalForwardStrategy = createLinearStrategy(
   firstCell,
   isLastCell,
@@ -284,6 +309,12 @@ export const linearHorizontalForwardStrategy = createLinearStrategy(
     isLastColumn(x, totalColumns) ? firstCellOfRowBelow(y) : cellToRight(x, y)
 );
 
+/**
+ * The linearHorizontalBackwardStrategy moves through cells from right to left,
+ * starting with the bottom-right cell. When it reaches the first cell in a row,
+ * it moves to the last cell of the previous row, and so on until there are no
+ * more rows.
+ */
 export const linearHorizontalBackwardStrategy = createLinearStrategy(
   lastCell,
   isFirstCell,
@@ -292,6 +323,12 @@ export const linearHorizontalBackwardStrategy = createLinearStrategy(
     isFirstColumn(x) ? lastCellOfRowAbove(y, totalColumns) : cellToLeft(x, y)
 );
 
+/**
+ * The linearVerticalForwardStrategy moves through cells from top to bottom,
+ * starting with the top-left cell. When it reaches the last cell in a column,
+ * it moves to the first cell of the next column, and so on until there are no
+ * more columns.
+ */
 export const linearVerticalForwardStrategy = createLinearStrategy(
   firstCell,
   isLastCell,
@@ -299,6 +336,12 @@ export const linearVerticalForwardStrategy = createLinearStrategy(
     isLastRow(y, totalRows) ? firstCellOfNextColumn(x) : cellBelow(x, y)
 );
 
+/**
+ * The linearVerticalBackwardStrategy moves through cells from bottom to top,
+ * starting with the bottom-right cell. When it reaches the first cell in a
+ * column, it moves to the last cell of the next column, and so on until there
+ * are no more columns.
+ */
 export const linearVerticalBackwardStrategy = createLinearStrategy(
   lastCell,
   isFirstCell,

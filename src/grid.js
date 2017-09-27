@@ -29,6 +29,11 @@ export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 // Utility
 // -----------------------------------------------------------------------------
 
+/**
+ * Get the default strategy for the grid.
+ * 
+ * @returns {function} The default iterator strategy for the grid.
+ */
 const defaultStrategy = () => linearHorizontalForwardStrategy;
 
 /**
