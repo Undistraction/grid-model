@@ -525,79 +525,103 @@ describe('grid', () => {
     // -------------------------------------------------------------------------
 
     describe('regionForCellsAt()', () => {
-      describe('with an invalid start index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 12,
-            rows: 13,
+      describe('invalid', () => {
+        describe('start index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
+
+            const invalidParams = [
+              [null, 6],
+              [6, null],
+              [-4, 5],
+              [4, -3],
+              ['4', 4],
+              [4, '4'],
+              [15, 3],
+              [4, 20],
+            ];
+
+            for (const param of invalidParams) {
+              expect(() =>
+                instance.regionForCellsAt(...param, 4, 7)
+              ).toThrowError();
+            }
           });
+        });
 
-          const invalidParams = [
-            [null, 6],
-            [6, null],
-            [-4, 5],
-            [4, -3],
-            ['4', 4],
-            [4, '4'],
-            [15, 3],
-            [4, 20],
-          ];
+        describe('end index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
 
-          for (const param of invalidParams) {
-            expect(() =>
-              instance.regionForCellsAt(...param, 4, 7)
-            ).toThrowError();
-          }
+            const invalidParams = [
+              [null, 6],
+              [6, null],
+              [-4, 5],
+              [4, -3],
+              ['4', 4],
+              [4, '4'],
+              [15, 3],
+              [4, 20],
+            ];
+
+            for (const param of invalidParams) {
+              expect(() =>
+                instance.regionForCellsAt(4, 6, ...param)
+              ).toThrowError();
+            }
+          });
         });
       });
+      describe('valid', () => {
+        describe('start and end indexes', () => {
+          describe('in order', () => {
+            it('returns the correct region', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 12,
+                rows: 13,
+              });
 
-      describe('with an invalid end index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 12,
-            rows: 13,
+              const region = instance.regionForCellsAt(0, 0, 11, 12);
+
+              const { topLeftPoint, dimensions } = region;
+
+              expect(topLeftPoint.x).toEqual(0);
+              expect(topLeftPoint.y).toEqual(0);
+              expect(dimensions.width).toEqual(100);
+              expect(dimensions.height).toEqual(300);
+            });
           });
 
-          const invalidParams = [
-            [null, 6],
-            [6, null],
-            [-4, 5],
-            [4, -3],
-            ['4', 4],
-            [4, '4'],
-            [15, 3],
-            [4, 20],
-          ];
+          describe('out of order', () => {
+            it('returns the correct region', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 12,
+                rows: 13,
+              });
 
-          for (const param of invalidParams) {
-            expect(() =>
-              instance.regionForCellsAt(4, 6, ...param)
-            ).toThrowError();
-          }
-        });
-      });
+              const region = instance.regionForCellsAt(11, 12, 0, 0);
+              const { topLeftPoint, dimensions } = region;
 
-      describe('with valid start and end indexes', () => {
-        it('returns the correct region', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 12,
-            rows: 13,
+              expect(topLeftPoint.x).toEqual(0);
+              expect(topLeftPoint.y).toEqual(0);
+              expect(dimensions.width).toEqual(100);
+              expect(dimensions.height).toEqual(300);
+            });
           });
-
-          const region = instance.regionForCellsAt(0, 0, 11, 12);
-
-          const { topLeftPoint, dimensions } = region;
-
-          expect(topLeftPoint.x).toEqual(0);
-          expect(topLeftPoint.y).toEqual(0);
-          expect(dimensions.width).toEqual(100);
-          expect(dimensions.height).toEqual(300);
         });
       });
     });
@@ -607,79 +631,102 @@ describe('grid', () => {
     // -------------------------------------------------------------------------
 
     describe('regionForColumns()', () => {
-      describe('with an invalid start index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 12,
-            rows: 13,
+      describe('invalid', () => {
+        describe('start index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
+
+            const invalidParams = [null, '4', 13, -4];
+
+            for (const param of invalidParams) {
+              expect(() => instance.regionForColumns(param)).toThrowError(
+                INVALID_COLUMN_INDEX_MESSAGE
+              );
+            }
           });
+        });
 
-          const invalidParams = [null, '4', 13, -4];
+        describe('end index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 12,
+              rows: 13,
+            });
 
-          for (const param of invalidParams) {
-            expect(() => instance.regionForColumns(param)).toThrowError(
-              INVALID_COLUMN_INDEX_MESSAGE
-            );
-          }
+            const invalidParams = ['4', 13, -4];
+
+            for (const param of invalidParams) {
+              expect(() => instance.regionForColumns(2, param)).toThrowError(
+                INVALID_COLUMN_INDEX_MESSAGE
+              );
+            }
+          });
         });
       });
+      describe('valid', () => {
+        describe('start column index', () => {
+          it('returns the region of that column', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
 
-      describe('with an invalid end index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 12,
-            rows: 13,
+            const columnRegion = instance.regionForColumns(3);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(30);
+            expect(topLeftPoint.y).toEqual(0);
+            expect(dimensions.width).toEqual(10);
+            expect(dimensions.height).toEqual(300);
           });
-
-          const invalidParams = ['4', 13, -4];
-
-          for (const param of invalidParams) {
-            expect(() => instance.regionForColumns(2, param)).toThrowError(
-              INVALID_COLUMN_INDEX_MESSAGE
-            );
-          }
         });
-      });
+        describe('start and end column indexes', () => {
+          describe('in order', () => {
+            it('returns a region spanning those regions', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 10,
+                rows: 10,
+              });
 
-      describe('with a valid start column index', () => {
-        it('returns the region of that column', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+              const columnRegion = instance.regionForColumns(2, 9);
+              const { topLeftPoint, dimensions } = columnRegion;
+
+              expect(topLeftPoint.x).toEqual(20);
+              expect(topLeftPoint.y).toEqual(0);
+              expect(dimensions.width).toEqual(80);
+              expect(dimensions.height).toEqual(300);
+            });
           });
 
-          const columnRegion = instance.regionForColumns(3);
-          const { topLeftPoint, dimensions } = columnRegion;
+          describe('out of order', () => {
+            it('returns a region spanning those regions', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 10,
+                rows: 10,
+              });
 
-          expect(topLeftPoint.x).toEqual(30);
-          expect(topLeftPoint.y).toEqual(0);
-          expect(dimensions.width).toEqual(10);
-          expect(dimensions.height).toEqual(300);
-        });
-      });
+              const columnRegion = instance.regionForColumns(9, 2);
+              const { topLeftPoint, dimensions } = columnRegion;
 
-      describe('with a valid start and end column index', () => {
-        it('returns a region spanning those regions', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+              expect(topLeftPoint.x).toEqual(20);
+              expect(topLeftPoint.y).toEqual(0);
+              expect(dimensions.width).toEqual(80);
+              expect(dimensions.height).toEqual(300);
+            });
           });
-
-          const columnRegion = instance.regionForColumns(2, 9);
-          const { topLeftPoint, dimensions } = columnRegion;
-
-          expect(topLeftPoint.x).toEqual(20);
-          expect(topLeftPoint.y).toEqual(0);
-          expect(dimensions.width).toEqual(80);
-          expect(dimensions.height).toEqual(300);
         });
       });
     });
@@ -689,79 +736,104 @@ describe('grid', () => {
     // -------------------------------------------------------------------------
 
     describe('regionForRows()', () => {
-      describe('with an invalid start index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+      describe('invalid', () => {
+        describe('with an invalid start index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const invalidParams = [null, '2', 11, -4];
+
+            for (const param of invalidParams) {
+              expect(() => instance.regionForRows(param)).toThrowError(
+                INVALID_ROW_INDEX_MESSAGE
+              );
+            }
           });
+        });
 
-          const invalidParams = [null, '2', 11, -4];
+        describe('with an invalid end index', () => {
+          it('throws an error', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
 
-          for (const param of invalidParams) {
-            expect(() => instance.regionForRows(param)).toThrowError(
-              INVALID_ROW_INDEX_MESSAGE
-            );
-          }
+            const invalidParams = ['4', 15, -4];
+
+            for (const param of invalidParams) {
+              expect(() => instance.regionForRows(2, param)).toThrowError(
+                INVALID_ROW_INDEX_MESSAGE
+              );
+            }
+          });
         });
       });
 
-      describe('with an invalid end index', () => {
-        it('throws an error', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+      describe('valid', () => {
+        describe('single row index', () => {
+          it('returns the region of that column', () => {
+            const instance = createGrid({
+              width: 100,
+              height: 300,
+              columns: 10,
+              rows: 10,
+            });
+
+            const columnRegion = instance.regionForRows(3);
+            const { topLeftPoint, dimensions } = columnRegion;
+
+            expect(topLeftPoint.x).toEqual(0);
+            expect(topLeftPoint.y).toEqual(90);
+            expect(dimensions.width).toEqual(100);
+            expect(dimensions.height).toEqual(30);
           });
-
-          const invalidParams = ['4', 15, -4];
-
-          for (const param of invalidParams) {
-            expect(() => instance.regionForRows(2, param)).toThrowError(
-              INVALID_ROW_INDEX_MESSAGE
-            );
-          }
         });
-      });
 
-      describe('with a valid row index', () => {
-        it('returns the region of that column', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+        describe('start and end row indexes', () => {
+          describe('indexes in order', () => {
+            it('returns a region spanning those regions', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 10,
+                rows: 10,
+              });
+
+              const columnRegion = instance.regionForRows(2, 9);
+              const { topLeftPoint, dimensions } = columnRegion;
+
+              expect(topLeftPoint.x).toEqual(0);
+              expect(topLeftPoint.y).toEqual(60);
+              expect(dimensions.width).toEqual(100);
+              expect(dimensions.height).toEqual(240);
+            });
           });
 
-          const columnRegion = instance.regionForRows(3);
-          const { topLeftPoint, dimensions } = columnRegion;
+          describe('indexes out of order', () => {
+            it('returns a region spanning those regions', () => {
+              const instance = createGrid({
+                width: 100,
+                height: 300,
+                columns: 10,
+                rows: 10,
+              });
 
-          expect(topLeftPoint.x).toEqual(0);
-          expect(topLeftPoint.y).toEqual(90);
-          expect(dimensions.width).toEqual(100);
-          expect(dimensions.height).toEqual(30);
-        });
-      });
+              const columnRegion = instance.regionForRows(9, 2);
+              const { topLeftPoint, dimensions } = columnRegion;
 
-      describe('with a valid start and end column index', () => {
-        it('returns a region spanning those regions', () => {
-          const instance = createGrid({
-            width: 100,
-            height: 300,
-            columns: 10,
-            rows: 10,
+              expect(topLeftPoint.x).toEqual(0);
+              expect(topLeftPoint.y).toEqual(60);
+              expect(dimensions.width).toEqual(100);
+              expect(dimensions.height).toEqual(240);
+            });
           });
-
-          const columnRegion = instance.regionForRows(2, 9);
-          const { topLeftPoint, dimensions } = columnRegion;
-
-          expect(topLeftPoint.x).toEqual(0);
-          expect(topLeftPoint.y).toEqual(60);
-          expect(dimensions.width).toEqual(100);
-          expect(dimensions.height).toEqual(240);
         });
       });
     });
