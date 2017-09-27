@@ -41,7 +41,7 @@
     "test": "NODE_ENV=test jest --config jest.config.js --watch",
     "test:cov": "NODE_ENV=test jest --config jest.config.js --watch --coverage",
     "docs":
-      "node_modules/documentation/bin/documentation.js serve src/** -f md --shallow & open http://localhost:4001",
+      "node_modules/documentation/bin/documentation.js serve src/** --format md --shallow --watch & open http://localhost:4001",
     "example":
       "yarn run build && NODE_ENV=example node_modules/babel-cli/bin/babel.js docs/example/example.js --out-file docs/example/compiled.js && node docs/example/compiled.js"
   }
