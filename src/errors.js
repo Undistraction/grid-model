@@ -1,3 +1,5 @@
+/** @module Errors */
+
 /* eslint-disable import/prefer-default-export' */
 const ERROR_PREFIX = '[Grid Model]';
 

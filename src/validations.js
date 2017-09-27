@@ -1,3 +1,5 @@
+/** @module Validations */
+
 import { isNumber, isInteger } from 'lodash';
 
 /**

@@ -1,3 +1,5 @@
+/** @module Grid */
+
 import { isNumber, isNil } from 'lodash';
 import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
@@ -485,6 +487,23 @@ const validateRowIndex = (index, total) => {
 // Entry
 // -----------------------------------------------------------------------------
 
+/**
+ * Create an object representing a grid.
+ * 
+ * @param {object} params A params object.
+ * @param {number} width The width of the grid.
+ * @param {number} height The height of the grid.
+ * @param {number} aspectRatio The aspect ratio of the grid.
+ * @param {number} rows The number of rows in the grid.
+ * @param {number} columns The number of columns in the grid.
+ * @param {number} cellWidth The width of a grid cell.
+ * @param {number} cellHeight The height of a grid cell.
+ * @param {number} gutterWidth The width of the gutters between grid cells.
+ * @param {number} gutterHeight The height of the gutters between grid cells.
+ * @param {number} gutter  The width and height of the gutters between grid
+ * cells.
+ * @returns {object} A grid object.
+ */
 const createGrid = (
   {
     width,
@@ -557,8 +576,21 @@ const createGrid = (
   // API
   // ---------------------------------------------------------------------------
 
+  /**
+   * Get the number of cells in the grid (columns * rows)
+   * 
+   * @returns {number} the number of cells in the grid.
+   */
   const cellCount = () => matrixDimensions.area();
 
+  /**
+   * Get the region for the cell at the supplied indexes.
+   * 
+   * @param {number} columnIndex The column index of the cell.
+   * @param {number} rowIndex  The row index of the cell.
+   * 
+   * @returns {object} A region object for the cell at the supplied indexes.
+   */
   const regionForCellAt = (columnIndex, rowIndex) => {
     validateColumnIndex(columnIndex, matrixDimensions.width);
     validateRowIndex(rowIndex, matrixDimensions.height);
@@ -576,6 +608,17 @@ const createGrid = (
     );
   };
 
+  /**
+   * Get the region encompassing the cells at the supplied indexes.
+   * 
+   * @param {number} startColumnIndex The column index of the first cell.
+   * @param {number} startRowIndex The row index of the first cell.
+   * @param {number} endColumnIndex The column index of the last cell.
+   * @param {number} endRowIndex The row index of the last cell.
+   * 
+   * @returns {object} A region object encompassing the cells at he supplied
+   * indexes.
+   */
   const regionForCellsAt = (
     startColumnIndex,
     startRowIndex,
@@ -587,23 +630,41 @@ const createGrid = (
     return regionForCells([startCell, endCell]);
   };
 
-  const regionForColumns = (start, end) => {
-    const startCell = regionForCellAt(start, 0);
+  /**
+   * Get the region encompassing one or more consecutive columns.
+   * 
+   * @param {number} startIndex The index of the first column.
+   * @param {any} endIndex The index of the last column.
+   *  
+   * @returns {object} A region object ecompassing all columns between the
+   * supplied indexes.
+   */
+  const regionForColumns = (startIndex, endIndex) => {
+    const startCell = regionForCellAt(startIndex, 0);
 
     const endCell = regionForCellAt(
-      !isNil(end) ? end : start,
+      !isNil(endIndex) ? endIndex : startIndex,
       matrixDimensions.height - 1
     );
 
     return regionForCells([startCell, endCell]);
   };
 
-  const regionForRows = (start, end) => {
-    const startCell = regionForCellAt(0, start);
+  /**
+   * Get the region encompassing one or more consecutive rows.
+   * 
+   * @param {number} startIndex The index of the first row.
+   * @param {any} endIndex The index of the last row.
+   *  
+   * @returns {object} A region object ecompassing all rows between the
+   * supplied indexes.
+   */
+  const regionForRows = (startIndex, endIndex) => {
+    const startCell = regionForCellAt(0, startIndex);
 
     const endCell = regionForCellAt(
       matrixDimensions.width - 1,
-      !isNil(end) ? end : start
+      !isNil(endIndex) ? endIndex : startIndex
     );
 
     return regionForCells([startCell, endCell]);

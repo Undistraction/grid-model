@@ -1,3 +1,9 @@
+/** 
+ * Dimensions Module.
+ * 
+ * @module Dimensions 
+ */
+
 import { isNumber } from 'lodash';
 import { isPositiveNumber } from './validations';
 import { throwError } from './errors';
@@ -7,6 +13,7 @@ export const INCORRECT_NUMBER_OF_PARAMS_MESSAGE =
 export const INVALID_PARAMS_MESSAGE = 'Parameter was invalid:';
 
 /**
+ * @memberof module:Dimensions
  * Throw an error due to params being invalid.
  * 
  * @param {string} param The name of the invalid param.

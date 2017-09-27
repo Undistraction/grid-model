@@ -1,3 +1,5 @@
+/** @module Region */
+
 import createPoint from './point';
 import { throwError } from './errors';
 

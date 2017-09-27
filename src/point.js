@@ -1,3 +1,5 @@
+/** @module Point */
+
 import { isNumber } from 'lodash';
 import { throwError } from './errors';
 

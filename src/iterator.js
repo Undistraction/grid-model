@@ -1,3 +1,5 @@
+/** @module Iterator */
+
 export const MISSING_GRID_MESSAGE = '[Grid Iterator] You must supply a grid';
 export const MISSING_STRATEGY_MESSAGE =
   '[Grid Iterator] You must supply a strategy';
