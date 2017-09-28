@@ -24,5 +24,6 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     'valid-jsdoc': ['error'],
     'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
+    'import/extensions': ['off', 'never'],
   },
 };
