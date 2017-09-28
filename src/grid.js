@@ -28,6 +28,32 @@ export const INVALID_COLUMN_INDEX_MESSAGE =
 export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 
 // -----------------------------------------------------------------------------
+// Logging
+// -----------------------------------------------------------------------------
+
+const print = message => {
+  // eslint-disable-next-line no-console
+  console.info(message);
+};
+
+const printInfo = grid => {
+  print('-----------------------------------------------------------');
+  print('Grid');
+  print('-----------------------------------------------------------');
+  print(`Width:              ${grid.width}`);
+  print(`Height:             ${grid.height}`);
+  print(`Aspect Ratio:       ${grid.aspectRatio}`);
+  print(`Columns:            ${grid.columns}`);
+  print(`Rows:               ${grid.rows}`);
+  print(`Cell Width:         ${grid.cellWidth}`);
+  print(`Cell Height:        ${grid.cellHeight}`);
+  print(`Gutter Width:       ${grid.gutterWidth}`);
+  print(`Gutter Height:      ${grid.gutterHeight}`);
+  print(`Total cells:        ${grid.matrixDimensions.area()}`);
+  print('-----------------------------------------------------------');
+};
+
+// -----------------------------------------------------------------------------
 // Utility
 // -----------------------------------------------------------------------------
 
@@ -695,6 +721,15 @@ const createGrid = (
     gutterHeight: gutterDimensions.height,
     get gutterDimensions() {
       return gutterDimensions;
+    },
+
+    /**
+     * Print information about the grid.
+     * 
+     * @returns {undefined}
+     */
+    info() {
+      printInfo(this);
     },
     cellCount,
     regionForCellAt,
