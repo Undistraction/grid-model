@@ -1,5 +1,4 @@
-/** @module Errors */
-
+/* eslint-disable import/prefer-default-export' */
 const ERROR_PREFIX = '[Grid Model]';
 
 /**
@@ -11,7 +10,6 @@ const ERROR_PREFIX = '[Grid Model]';
  * @returns {undefined}
  * @private
  */
-/* eslint-disable-next-line import/prefer-default-export' */
 export const throwError = message => {
   throw new Error(`${ERROR_PREFIX} ${message}`);
 };
