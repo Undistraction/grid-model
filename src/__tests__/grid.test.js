@@ -632,6 +632,7 @@ describe('grid', () => {
               });
 
               const region = instance.regionForCellsAt(11, 12, 0, 0);
+
               const { topLeftPoint, dimensions } = region;
 
               expect(topLeftPoint.x).toEqual(0);

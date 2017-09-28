@@ -61,6 +61,7 @@ const printInfo = grid => {
  * Get the default strategy for the grid.
  * 
  * @returns {function} The default iterator strategy for the grid.
+ * @private
  */
 const defaultStrategy = () => linearHorizontalForwardStrategy;
 
@@ -70,6 +71,7 @@ const defaultStrategy = () => linearHorizontalForwardStrategy;
  * 
  * @param {array} cells An array of cells. 
  * @returns {object} Region encompassing all supplied cells.
+ * @private
  */
 const regionForCells = cells => {
   const tlX = cells
@@ -100,6 +102,7 @@ const regionForCells = cells => {
  * 
  * @param {array} params Array of params to check.
  * @returns {array} of params that have been set.
+ * @private
  */
 const validParamCount = params =>
   params.filter(param => !isNil(param) && param !== '').length;
@@ -118,6 +121,7 @@ const validParamCount = params =>
  * @param {number} cellHeight the height of a cell in the grid.
  * 
  * @returns {null} Nothing is returned.
+ * @private
  */
 const validateParams = (
   width,
@@ -151,7 +155,9 @@ const validateParams = (
  * @param {number} cellHeight The height of a cell in the grid.
  * @param {number} rows The number of rows in the grid.
  * 
- * @returns {boolean} Is there enought information to derive a width for the grid?
+ * @returns {boolean} Is there enought information to derive a width for the
+ * grid?
+ * @private
  */
 const canDeriveWidth = (cellHeight, rows) =>
   !!(isNumber(cellHeight) && isNumber(rows));
@@ -163,7 +169,9 @@ const canDeriveWidth = (cellHeight, rows) =>
  * @param {number} cellWidth The width of a cell in the grid.
  * @param {number} columns The number of columns in the grid.
  * 
- * @returns {boolean} Is there enought information to derive a height for the grid?
+ * @returns {boolean} Is there enought information to derive a height for the
+ * grid?
+ * @private
  */
 const canDeriveHeight = (cellWidth, columns) =>
   !!(isNumber(cellWidth) && isNumber(columns));
@@ -176,6 +184,7 @@ const canDeriveHeight = (cellWidth, columns) =>
  * @param {number} gutterWidth The width of the gutters in the grid.
  * 
  * @returns {number} The calculated width of the grid.
+ * @private
  */
 const deriveWidth = (columns, cellWidth, gutterWidth = 0) =>
   cellWidth * columns + gutterWidth * (columns - 1);
@@ -188,6 +197,7 @@ const deriveWidth = (columns, cellWidth, gutterWidth = 0) =>
  * @param {number} gutterHeight The height of the gutters in the grid.
  * 
  * @returns {number} The calculated height of the grid.
+ * @private
  */
 const deriveHeight = (rows, cellHeight, gutterHeight = 0) =>
   cellHeight * rows + gutterHeight * (rows - 1);
@@ -200,6 +210,7 @@ const deriveHeight = (rows, cellHeight, gutterHeight = 0) =>
  * @param {number} columns The number of columns in the grid.
  * 
  * @returns {number} The width of cells in the grid.
+ * @private
  */
 const deriveCellWidth = (width, gutterWidth = 0, columns) =>
   (width - gutterWidth * (columns - 1)) / columns;
@@ -212,6 +223,7 @@ const deriveCellWidth = (width, gutterWidth = 0, columns) =>
  * @param {number} rows The number of rows in the grid.
  * 
  * @returns {number} The height of cells in the grid.
+ * @private
  */
 const deriveCellHeight = (height, gutterHeight = 0, rows) =>
   (height - gutterHeight * (rows - 1)) / rows;
@@ -224,6 +236,7 @@ const deriveCellHeight = (height, gutterHeight = 0, rows) =>
  * 
  * @returns {boolean} Is there enought information to derive a number of columns
  * in the grid?
+ * @private
  */
 const canDeriveColumns = (width, cellWidth) =>
   !!(isNumber(width) && isNumber(cellWidth));
@@ -236,6 +249,7 @@ const canDeriveColumns = (width, cellWidth) =>
  * 
  * @returns {boolean} Is there enought information to derive a number of rows
  * in the grid?
+ * @private
  */
 const canDeriveRows = (height, cellHeight) =>
   !!(isNumber(height) && isNumber(cellHeight));
@@ -247,6 +261,7 @@ const canDeriveRows = (height, cellHeight) =>
  * @param {number} cellWidth The width of a cell in the grid.
  * 
  * @returns {number} The number of columns in the grid.
+ * @private
  */
 const deriveColumns = (width, cellWidth) => width / cellWidth;
 
@@ -257,6 +272,7 @@ const deriveColumns = (width, cellWidth) => width / cellWidth;
  * @param {number} cellHeight The height of a cell in the grid.
  * 
  * @returns {number} The number of rows in the grid.
+ * @private
  */
 const deriveRows = (height, cellHeight) => height / cellHeight;
 
@@ -267,6 +283,7 @@ const deriveRows = (height, cellHeight) => height / cellHeight;
  * @param {number} totalColumns The total number of columns.
  * 
  * @returns {boolean} Does a column of the supplied index exist in this grid?
+ * @private
  */
 const columnExists = (columnIndex, totalColumns) =>
   columnIndex <= totalColumns - 1;
@@ -278,6 +295,7 @@ const columnExists = (columnIndex, totalColumns) =>
  * @param {number} totalRows The total number of rows.
  * 
  * @returns {boolean} Does a row of the supplied index exist in this grid?
+ * @private
  */
 const rowExists = (rowIndex, totalRows) => rowIndex <= totalRows - 1;
 
@@ -292,6 +310,7 @@ const rowExists = (rowIndex, totalRows) => rowIndex <= totalRows - 1;
  * @param {number} gutterHeight The height of the gutters.
  * 
  * @returns {object} a point
+ * @private
  */
 const createTopLeftPointForCell = (
   x,
@@ -321,6 +340,7 @@ const createTopLeftPointForCell = (
  * @param {number} gutterHeight The height of the gutters in the grid.
  * 
  * @returns {object} An object representing the dimensions of the grid.
+ * @private
  */
 const saveDimensions = (
   width,
@@ -364,6 +384,7 @@ const saveDimensions = (
  * @param {number} cellHeight The height of cells in the grid.
  * 
  * @returns {object} An object representing the grid dimensions.
+ * @private
  */
 const saveMatrixDimensions = (
   columns,
@@ -409,6 +430,7 @@ const saveMatrixDimensions = (
  * @param {object} matrixDimensions The matrix dimensions of the grid.
  * 
  * @returns {object} An object representing the grid dimensions.
+ * @private
  */
 const saveCellDimensions = (
   cellWidth,
@@ -443,6 +465,7 @@ const saveCellDimensions = (
  * @param {number} cellDimensions The cell dimensions of the grtid.
  * 
  * @returns {object} An object representing the gutter dimensions of the grid.
+ * @private
  */
 const saveGutterDimensions = (
   gutterWidth,
@@ -484,6 +507,7 @@ const saveGutterDimensions = (
  * @param {number} total The total number of columns in the grid.
  * 
  * @returns {boolean} Does the supplied column index exist.
+ * @private
  */
 const validateColumnIndex = (index, total) => {
   if (
@@ -502,6 +526,7 @@ const validateColumnIndex = (index, total) => {
  * @param {number} total The total number of columns in the grid.
  * 
  * @returns {boolean} Does the supplied row index exist.
+ * @private
  */
 const validateRowIndex = (index, total) => {
   if (isNil(index) || !isPositiveInteger(index) || !rowExists(index, total)) {
@@ -737,6 +762,12 @@ const createGrid = (
     regionForRows,
     regionForCellsAt,
     // Note: Don't use an arrow function as we want it to bind to this object.
+
+    /**
+     * Get the grid's default iterator object.
+     * 
+     * @returns {object} The default iterator object for the grid.
+     */
     getIterator() {
       return createIterator(this);
     },

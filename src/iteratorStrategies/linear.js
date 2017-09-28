@@ -1,11 +1,10 @@
-/** @module Iteration Strategies: Linear */
-
 /**
  * Increment the supplied index by one.
  * 
  * @param {number} index The index to be incremented.
  * 
  * @return {number} The incremented index.
+ * @private
  */
 const incrementIndex = index => index + 1;
 
@@ -15,11 +14,16 @@ const incrementIndex = index => index + 1;
  * @param {number} index The index to be decremented.
  * 
  * @return {number} The decremented index.
+ * @private
  */
 const decrementIndex = index => index - 1;
 
 /**
- * @return {number} The index of the first column in the grid. This will always * be zero as column indexes are zero-based.
+ * {number} The index of the first column in the grid. This will always be zero
+ * as column indexes are zero-based.
+ * 
+ * @return {number} The index of the first column in the grid.
+ * @private
  */
 const firstColumn = () => 0;
 
@@ -30,12 +34,16 @@ const firstColumn = () => 0;
  * @param {number} totalColumns The total number of columns.
  * 
  * @returns {number} Zero-based version of total number of columns.
+ * @private
  */
 const lastColumn = totalColumns => totalColumns - 1;
 
 /**
- * @return {number} The index of the first row in the grid. This will always be
+ * Get the index of the first row in the grid. This will always be
  * zero as row indexes are zero-based.
+ * 
+ * @return {number} The index of the first row in the grid.
+ * @private
  */
 const firstRow = () => 0;
 
@@ -46,6 +54,7 @@ const firstRow = () => 0;
  * @param {number} totalRows The total number of rows.
  * 
  * @returns {number} Zero-based version of total number of rows.
+ * @private
  */
 const lastRow = totalRows => totalRows - 1;
 
@@ -55,6 +64,7 @@ const lastRow = totalRows => totalRows - 1;
  * 
  * @returns {array} An array containing the column and row indexes of the first
  * cell.
+ * @private
  */
 const firstCell = () => [firstColumn(), firstRow()];
 const lastCell = (totalColumns, totalRows) => [
@@ -69,6 +79,7 @@ const lastCell = (totalColumns, totalRows) => [
  * @param {number} rowIndex The row index.
  * 
  * @returns {array} The indexes of cell to the right.
+ * @private
  */
 const cellToRight = (columnIndex, rowIndex) => [
   incrementIndex(columnIndex),
@@ -82,6 +93,7 @@ const cellToRight = (columnIndex, rowIndex) => [
  * @param {number} rowIndex The row index.
  * 
  * @returns {array} The indexes of cell to the left.
+ * @private
  */
 const cellToLeft = (columnIndex, rowIndex) => [
   decrementIndex(columnIndex),
@@ -95,6 +107,7 @@ const cellToLeft = (columnIndex, rowIndex) => [
  * @param {number} rowIndex The row index.
  * 
  * @returns {array} The indexes of cell below.
+ * @private
  */
 const cellBelow = (columnIndex, rowIndex) => [
   columnIndex,
@@ -108,6 +121,7 @@ const cellBelow = (columnIndex, rowIndex) => [
  * @param {number} rowIndex The row index.
  * 
  * @returns {array} The indexes of cell above.
+ * @private
  */
 const cellAbove = (columnIndex, rowIndex) => [
   columnIndex,
@@ -122,6 +136,7 @@ const cellAbove = (columnIndex, rowIndex) => [
  * 
  * @returns {array} The indexes of first cell in the next column to the on with
  * the supplied index.
+ * @private
  */
 const firstCellOfNextColumn = columnIndex => [
   incrementIndex(columnIndex),
@@ -136,6 +151,7 @@ const firstCellOfNextColumn = columnIndex => [
  * 
  * @returns {array} The indexes of first cell in the previous column to the one
  * with the supplied index.
+ * @private
  */
 // eslint-disable-next-line no-unused-vars
 const firstCellOfPreviousColumn = columnIndex => [
@@ -151,6 +167,7 @@ const firstCellOfPreviousColumn = columnIndex => [
  * 
  * @returns {array} The indexes of last cell in the next column to the on with
  * the supplied index.
+ * @private
  */
 // eslint-disable-next-line no-unused-vars
 const lastCellOfNextColumn = (columnIndex, totalRows) => [
@@ -167,6 +184,7 @@ const lastCellOfNextColumn = (columnIndex, totalRows) => [
  * 
  * @returns {array} The indexes of last cell in previous column to the one with
  * the supplied index.
+ * @private
  */
 const lastCellOfPreviousColumn = (columnIndex, totalRows) => [
   decrementIndex(columnIndex),
@@ -181,6 +199,7 @@ const lastCellOfPreviousColumn = (columnIndex, totalRows) => [
  * 
  * @returns {array} The indexes of first cell in the row below the one with the
  * supplied index.
+ * @private
  */
 const firstCellOfRowBelow = rowIndex => [
   firstColumn(),
@@ -195,6 +214,7 @@ const firstCellOfRowBelow = rowIndex => [
  * 
  * @returns {array} The indexes of first cell in the row above the one with the
  * supplied index.
+ * @private
  */
 // eslint-disable-next-line no-unused-vars
 const firstCellOfRowAbove = rowIndex => [
@@ -211,6 +231,7 @@ const firstCellOfRowAbove = rowIndex => [
  * 
  * @returns {array} The indexes of last cell in the row below the one with the
  * supplied index.
+ * @private
  */
 // eslint-disable-next-line no-unused-vars
 const lastCellOfRowBelow = (rowIndex, totalColumns) => [
@@ -225,20 +246,81 @@ const lastCellOfRowBelow = (rowIndex, totalColumns) => [
  * @param {number} rowIndex The row index.
  * @param {number} totalColumns The total number of columns.
  * 
- * @returns {array} The indexes of last cell in the row above the one with the supplied index.
+ * @returns {array} The indexes of last cell in the row above the one with the
+ * supplied index.
+ * @private
  */
 const lastCellOfRowAbove = (rowIndex, totalColumns) => [
   lastColumn(totalColumns),
   decrementIndex(rowIndex),
 ];
 
+/**
+ * Is this the index of the first column?
+ * 
+ * @param {number} columnIndex The column index.
+ * 
+ * @returns {boolean} Was the supplied index the index of the first column?
+ * @private
+ */
 const isFirstColumn = columnIndex => columnIndex === firstColumn();
+
+/**
+ * Is this the index of the last column?
+ * 
+ * @param {number} columnIndex The column index.
+ * @param {number} totalColumns The total number of columns.
+ * 
+ * @returns {boolean} Was the supplied index the index of the last column?
+ * @private
+ */
 const isLastColumn = (columnIndex, totalColumns) =>
   columnIndex === lastColumn(totalColumns);
+
+/**
+ * Is this the index of the first row?
+ * 
+ * @param {number} rowIndex The row index.
+ * 
+ * @returns {boolean} Was the supplied index the index of the first row?
+ * @private
+ */
 const isFirstRow = rowIndex => rowIndex === firstRow();
+
+/**
+ * Is this the index of the last row?
+ * 
+ * @param {number} rowIndex The row index.
+ * @param {number} totalRows The total number of rows.
+ * 
+ * @returns {boolean} Was the supplied index the index of the last row?
+ * @private
+ */
 const isLastRow = (rowIndex, totalRows) => rowIndex === lastRow(totalRows);
+
+/**
+ * Are these the indexes of the first cell?
+ * 
+ * @param {number} columnIndex The column index.
+ * @param {number} rowIndex The row index.
+ * 
+ * @returns {boolane} Werre the supplied indexes the indexes of the first cell?
+ * @private
+ */
 const isFirstCell = (columnIndex, rowIndex) =>
   isFirstColumn(columnIndex) && isFirstRow(rowIndex);
+
+/**
+ * Are these the indexes of the last cell?
+ * 
+ * @param {number} columnIndex The column index.
+ * @param {number} rowIndex The row index.
+ * @param {number} totalColumns The total number of columns.
+ * @param {number} totalRows The total number of rows.
+ * 
+ * @returns {boolane} Werre the supplied indexes the indexes of the last cell?
+ * @private
+ */
 const isLastCell = (columnIndex, rowIndex, totalColumns, totalRows) =>
   isLastColumn(columnIndex, totalColumns) && isLastRow(rowIndex, totalRows);
 

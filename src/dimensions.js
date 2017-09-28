@@ -13,13 +13,13 @@ export const INCORRECT_NUMBER_OF_PARAMS_MESSAGE =
 export const INVALID_PARAMS_MESSAGE = 'Parameter was invalid:';
 
 /**
- * @memberof module:Dimensions
  * Throw an error due to params being invalid.
  * 
  * @param {string} param The name of the invalid param.
  * @param {value} value The value of the invalid param.
  * 
  * @returns {undefined}
+ * @private
  */
 const throwInvalidParamError = (param, value) => {
   throwError(`${INVALID_PARAMS_MESSAGE} ${param}: ${value}`);
@@ -34,6 +34,7 @@ const throwInvalidParamError = (param, value) => {
  * @param {number} aspectRatio The aspectRatio.
  * 
  * @returns {object} An object containing the validated arguments.
+ * @private
  */
 const validateArgs = (width, height, aspectRatio) => {
   if (width && !isNumber(width)) throwInvalidParamError('width', width);
@@ -65,6 +66,7 @@ const validateArgs = (width, height, aspectRatio) => {
  * @param {number} aspectRatio The aspectRatio of the dimensions.
  * 
  * @returns {object} A dimensions object.
+ * @private
  */
 const createDimensions = ({ width, height, aspectRatio }) => {
   // Validate supplied params are valid

@@ -1,5 +1,3 @@
-/** @module Point */
-
 import { isNumber } from 'lodash';
 import { throwError } from './errors';
 
@@ -10,7 +8,9 @@ export const INVALID_PARAMS_MESSAGE = 'Params were invalid';
  * 
  * @param {number} x The x coordinate.
  * @param {number} y  The y coordinate.
+ * 
  * @returns {object} An object containing the validated values.
+ * @private
  */
 const validateArgs = (x, y) => {
   if (!isNumber(x) || !isNumber(y)) {
@@ -39,4 +39,5 @@ const createPoint = (x, y) => {
   };
 };
 
+/** @module Point */
 export default createPoint;

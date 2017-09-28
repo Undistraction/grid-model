@@ -12,7 +12,9 @@ export const INVALID_PARAMS_ERROR_MESSAGE =
  * @param {object} origin A point object.
  * 
  * @param {any} dimensions A dimensions object.
+ * 
  * @returns {undefined}
+ * @private
  */
 const validateArgs = (origin, dimensions) => {
   if (!origin || !dimensions) {
@@ -32,6 +34,7 @@ const validateArgs = (origin, dimensions) => {
  * 
  * @returns {object} An object containing points objects for each corner of the
  * region.
+ * @private
  */
 const calculatePoints = (top, right, bottom, left) => ({
   topLeftPoint: createPoint(left, top),
@@ -48,7 +51,7 @@ const calculatePoints = (top, right, bottom, left) => ({
  * @param {dimensions} dimensions A dimensions object.
  * 
  * @returns {object} An object containing th bounds for each edge of the region.
- * 
+ * @private
  */
 const calculateBounds = (origin, dimensions) => ({
   top: origin.y,
