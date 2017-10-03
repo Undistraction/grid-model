@@ -25,6 +25,9 @@ const createIterator = (strategy, grid) => {
 
   return {
     next: strategy(grid.columns, grid.rows),
+    [Symbol.iterator]() {
+      return this;
+    },
   };
 };
 
