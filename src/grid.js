@@ -624,13 +624,6 @@ const createGrid = (
   // ---------------------------------------------------------------------------
 
   /**
-   * Get the number of cells in the grid (columns * rows)
-   * 
-   * @returns {number} the number of cells in the grid.
-   */
-  const cellCount = () => matrixDimensions.area();
-
-  /**
    * Get the region for the cell at the supplied indexes.
    * 
    * @param {number} columnIndex The column index of the cell.
@@ -752,7 +745,13 @@ const createGrid = (
     info() {
       printInfo(this);
     },
-    cellCount,
+
+    /**
+     * Get the number of cells in the grid (columns * rows)
+     * 
+     * @returns {number} the number of cells in the grid.
+     */
+    cellCount: matrixDimensions.area,
     regionForCellAt,
     regionForColumns,
     regionForRows,
