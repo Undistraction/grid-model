@@ -856,22 +856,5 @@ describe('grid', () => {
         });
       });
     });
-
-    describe('getIterator', () => {
-      it('returns an iterator', () => {
-        const instance = createGrid({
-          width: 100,
-          height: 200,
-          columns: 5,
-          rows: 8,
-        });
-
-        const firstCellIndexes = instance.getIterator().next().value;
-        const firstCell = instance.regionForCellAt(...firstCellIndexes);
-
-        expect(firstCell.topLeftPoint.x).toEqual(0);
-        expect(firstCell.topLeftPoint.y).toEqual(0);
-      });
-    });
   });
 });

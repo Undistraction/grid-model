@@ -9,21 +9,22 @@ export const MISSING_STRATEGY_MESSAGE =
  * the `interatorStrategy` of the grid to decide how to iterate, for example
  * should it iterate forward or backwards, vertically or horizontally?
  * 
+ *  @param {object} strategy Object represeting the strategy to use for
+ * iteration.
  * @param {object} grid Object represeting the grid to iterate over.
  * 
  * @returns {object} An iterator object with a single `next` property.
  */
-const createIterator = grid => {
+const createIterator = (strategy, grid) => {
+  if (!strategy) {
+    throw new Error(MISSING_STRATEGY_MESSAGE);
+  }
   if (!grid) {
     throw new Error(MISSING_GRID_MESSAGE);
   }
 
-  if (!grid.iteratorStrategy) {
-    throw new Error(MISSING_STRATEGY_MESSAGE);
-  }
-
   return {
-    next: grid.iteratorStrategy(grid.columns, grid.rows),
+    next: strategy(grid.columns, grid.rows),
   };
 };
 

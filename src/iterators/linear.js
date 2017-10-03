@@ -1,4 +1,6 @@
+import { curry } from 'lodash';
 import { increment, decrement } from '../math';
+import createIterator from '../iterator';
 
 /**
  * {number} The index of the first column in the grid. This will always be zero
@@ -347,11 +349,11 @@ const createLinearStrategy = (getStartingCell, isEndingCell, getNextCell) => (
 
 /**
  * The linearHorizontalForwardStrategy moves through cells from left to right,
- * starting with the top-right cell. When it reaches the last cell in a row, it
+ * starting with the top-left cell. When it reaches the last cell in a row, it
  * moves to the first cell of the next row, and so on until there are no more
  * rows.
  */
-export const linearHorizontalForwardStrategy = createLinearStrategy(
+const linearHorizontalForwardStrategy = createLinearStrategy(
   firstCell,
   isLastCell,
   // eslint-disable-next-line no-unused-vars
@@ -365,7 +367,7 @@ export const linearHorizontalForwardStrategy = createLinearStrategy(
  * it moves to the last cell of the previous row, and so on until there are no
  * more rows.
  */
-export const linearHorizontalBackwardStrategy = createLinearStrategy(
+const linearHorizontalBackwardStrategy = createLinearStrategy(
   lastCell,
   isFirstCell,
   // eslint-disable-next-line no-unused-vars
@@ -379,7 +381,7 @@ export const linearHorizontalBackwardStrategy = createLinearStrategy(
  * it moves to the first cell of the next column, and so on until there are no
  * more columns.
  */
-export const linearVerticalForwardStrategy = createLinearStrategy(
+const linearVerticalForwardStrategy = createLinearStrategy(
   firstCell,
   isLastCell,
   (x, y, totalColumns, totalRows) =>
@@ -392,9 +394,29 @@ export const linearVerticalForwardStrategy = createLinearStrategy(
  * column, it moves to the last cell of the next column, and so on until there
  * are no more columns.
  */
-export const linearVerticalBackwardStrategy = createLinearStrategy(
+const linearVerticalBackwardStrategy = createLinearStrategy(
   lastCell,
   isFirstCell,
   (x, y, totalColumns, totalRows) =>
     isFirstRow(y) ? lastCellOfPreviousColumn(x, totalRows) : cellAbove(x, y)
+);
+
+// -----------------------------------------------------------------------------
+// Iterators
+// -----------------------------------------------------------------------------
+
+export const linearHorizontalForwardIterator = curry(createIterator)(
+  linearHorizontalForwardStrategy
+);
+
+export const linearHorizontalBackwardIterator = curry(createIterator)(
+  linearHorizontalBackwardStrategy
+);
+
+export const linearVerticalForwardIterator = curry(createIterator)(
+  linearVerticalForwardStrategy
+);
+
+export const linearVerticalBackwardIterator = curry(createIterator)(
+  linearVerticalBackwardStrategy
 );

@@ -3,10 +3,8 @@
 import { isNumber, isNil } from 'lodash';
 import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
-import { linearHorizontalForwardStrategy } from './iteratorStrategies/linear';
 import createRegion from './region';
 import createPoint from './point';
-import createIterator from './iterator';
 import { throwError } from './errors';
 import { print, printDivider } from './logging';
 import { keepGreatest, keepSmallest } from './math';
@@ -53,14 +51,6 @@ const printInfo = grid => {
 // -----------------------------------------------------------------------------
 // Utility
 // -----------------------------------------------------------------------------
-
-/**
- * Get the default strategy for the grid.
- * 
- * @returns {function} The default iterator strategy for the grid.
- * @private
- */
-const defaultStrategy = () => linearHorizontalForwardStrategy;
 
 /**
  * Use the extents of all the supplied cells to calculate a region that includes
@@ -758,16 +748,6 @@ const createGrid = (
     regionForRows,
     regionForCellsAt,
     // Note: Don't use an arrow function as we want it to bind to this object.
-
-    /**
-     * Get the grid's default iterator object.
-     * 
-     * @returns {object} The default iterator object for the grid.
-     */
-    getIterator() {
-      return createIterator(this);
-    },
-    iteratorStrategy: defaultStrategy(),
   };
 };
 

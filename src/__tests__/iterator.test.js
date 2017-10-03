@@ -2,26 +2,20 @@ import createIterator, {
   MISSING_GRID_MESSAGE,
   MISSING_STRATEGY_MESSAGE,
 } from '../iterator';
+import { linearHorizontalForwardIterator } from '../iterators/linear';
 import createGrid from '../grid';
 
-const times = x => f => {
-  if (x > 0) {
-    f();
-    times(x - 1)(f);
-  }
-};
-
 describe('iterator', () => {
-  describe('without a grid', () => {
+  describe('without a strategy', () => {
     it('throws and error', () => {
-      expect(() => createIterator()).toThrowError(MISSING_GRID_MESSAGE);
+      expect(() => createIterator()).toThrowError(MISSING_STRATEGY_MESSAGE);
     });
   });
 
   describe('with a grid', () => {
     describe('without an iterator strategy', () => {
       it('throws an error', () => {
-        expect(() => createIterator({})).toThrowError(MISSING_STRATEGY_MESSAGE);
+        expect(() => createIterator({})).toThrowError(MISSING_GRID_MESSAGE);
       });
     });
 
@@ -35,7 +29,7 @@ describe('iterator', () => {
 
       const expectedIndexes = [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1]];
 
-      const instance = createIterator(gridInstance);
+      const instance = linearHorizontalForwardIterator(gridInstance);
 
       // 120 cells
       for (const expectedIndex of expectedIndexes) {
