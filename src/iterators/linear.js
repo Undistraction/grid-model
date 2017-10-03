@@ -3,6 +3,35 @@ import { increment, decrement } from '../math';
 import createIterator from '../iterator';
 
 /**
+ * The top left corner cell of the grid.
+ */
+export const TOP_LEFT_CORNER = 'tl';
+
+/**
+ * The top right corner cell of the grid.
+ */
+export const TOP_RIGHT_CORNER = 'tr';
+
+/**
+ * The bottom right corner cell of the grid.
+ */
+export const BOTTOM_RIGHT_CORNER = 'br';
+
+/**
+ * The bottom left corner cell of the grid.
+ */
+export const BOTTOM_LEFT_CORNER = 'bl';
+
+/**
+ * Vertical direction.
+ */
+export const VERTICAL = 'vertical';
+
+/**
+ * Horizontal direction.
+ */
+export const HORIZONTAL = 'horizontal';
+/**
  * {number} The index of the first column in the grid. This will always be zero
  * as column indexes are zero-based.
  * 
@@ -43,16 +72,57 @@ const firstRow = () => 0;
 const lastRow = totalRows => totalRows - 1;
 
 /**
- * Get the indexes of the first cell in the grid. This will always be [0,0]
+ * Get the indexes of the top left cell in the grid. This will always be [0,0]
  * because column and row indexes are zero-based.
  * 
- * @returns {array} An array containing the column and row indexes of the first
- * cell.
+ * @returns {array} An array containing the column and row indexes of the top left cell.
  * @private
  */
-const firstCell = () => [firstColumn(), firstRow()];
-const lastCell = (totalColumns, totalRows) => [
+const topLeftCell = () => [firstColumn(), firstRow()];
+
+/**
+ * Get the indexes of the top right cell in the grid. This will always be
+ * [totalColumns -1,0] because column and row indexes are zero-based.
+ * 
+ * @param {any} totalColumns The total number of columns.
+ * 
+ * @returns {array} An array containing the column and row indexes of the top
+ * right cell.
+ * @private
+ */
+const topRightCell = totalColumns => [lastColumn(totalColumns), firstRow()];
+
+/**
+ * Get the indexes of the bottom right cell in the grid. This will always be
+ * [totalColumns -1, totalRows -1] because the column and row indexes are zero
+ * based.
+ * 
+ * @param {any} totalColumns The total number of columns.
+ * @param {any} totalRows The totoal number of rows.
+ * 
+ * @returns {array} An array containing the column and row indeses of the
+ * bottom-right cell.
+ * @private
+ */
+const bottomRightCell = (totalColumns, totalRows) => [
   lastColumn(totalColumns),
+  lastRow(totalRows),
+];
+
+/**
+ * Get the indexes of the bottom left cell in the grid. This will always be
+ * [totalColumns -1, totalRows -1] because the column and row indexes are zero
+ * based.
+ * 
+ * @param {any} totalColumns The totoal number of columns.
+ * @param {any} totalRows The totoal number of rows.
+ * 
+ * @returns {array} An array containing the column and row indeses of the
+ * bottom-left cell.
+ * @private
+ */
+const bottomLeftCell = (totalColumns, totalRows) => [
+  firstColumn(),
   lastRow(totalRows),
 ];
 
@@ -271,30 +341,130 @@ const isFirstRow = rowIndex => rowIndex === firstRow();
 const isLastRow = (rowIndex, totalRows) => rowIndex === lastRow(totalRows);
 
 /**
- * Are these the indexes of the first cell?
+ * Are these the indexes of the top left cell?
  * 
  * @param {number} columnIndex The column index.
  * @param {number} rowIndex The row index.
  * 
- * @returns {boolane} Werre the supplied indexes the indexes of the first cell?
+ * @returns {boolane} Werre the supplied indexes the indexes of the top left cell?
  * @private
  */
-const isFirstCell = (columnIndex, rowIndex) =>
+const isTopLeftCell = (columnIndex, rowIndex) =>
   isFirstColumn(columnIndex) && isFirstRow(rowIndex);
 
 /**
- * Are these the indexes of the last cell?
+ * Are these the indexes of the top right cell?
+ * 
+ * @param {number} columnIndex The column index.
+ * @param {number} rowIndex The row index.
+ * @param {number} totalColumns The total number of columns.
+ * 
+ * @returns {boolane} Werre the supplied indexes the indexes of the top right cell?
+ * @private
+ */
+const isTopRightCell = (columnIndex, rowIndex, totalColumns) =>
+  isLastColumn(columnIndex, totalColumns) && isFirstRow(rowIndex);
+
+/**
+ * Are these the indexes of the bottom right cell?
  * 
  * @param {number} columnIndex The column index.
  * @param {number} rowIndex The row index.
  * @param {number} totalColumns The total number of columns.
  * @param {number} totalRows The total number of rows.
  * 
- * @returns {boolane} Werre the supplied indexes the indexes of the last cell?
+ * @returns {boolane} Werre the supplied indexes the indexes of the bottom right
+ * cell?
  * @private
  */
-const isLastCell = (columnIndex, rowIndex, totalColumns, totalRows) =>
+const isBottomRightCell = (columnIndex, rowIndex, totalColumns, totalRows) =>
   isLastColumn(columnIndex, totalColumns) && isLastRow(rowIndex, totalRows);
+
+/**
+ * Are these the indexes of the bottom left cell?
+ * 
+ * @param {number} columnIndex The column index.
+ * @param {number} rowIndex The row index.
+ * @param {number} totalColumns The total number of columns.
+ * @param {number} totalRows The total number of rows.
+ * 
+ * @returns {boolane} Werre the supplied indexes the indexes of the bottom left
+ * cell?
+ * @private
+ */
+const isBottomLeftCell = (columnIndex, rowIndex, totalColumns, totalRows) =>
+  isFirstColumn(columnIndex) && isLastRow(rowIndex, totalRows);
+
+const startingCellFuncMap = {
+  [TOP_LEFT_CORNER]: {
+    [HORIZONTAL]: [
+      topLeftCell,
+      isBottomRightCell,
+      (x, y, totalColumns) =>
+        isLastColumn(x, totalColumns)
+          ? firstCellOfRowBelow(y)
+          : cellToRight(x, y),
+    ],
+    [VERTICAL]: [
+      topLeftCell,
+      isBottomRightCell,
+      (x, y, totalColumns, totalRows) =>
+        isLastRow(y, totalRows) ? firstCellOfNextColumn(x) : cellBelow(x, y),
+    ],
+  },
+  [TOP_RIGHT_CORNER]: {
+    [HORIZONTAL]: [
+      topRightCell,
+      isBottomLeftCell,
+      (x, y, totalColumns) =>
+        isFirstColumn(x)
+          ? lastCellOfRowBelow(y, totalColumns)
+          : cellToLeft(x, y),
+    ],
+    [VERTICAL]: [
+      topRightCell,
+      isBottomLeftCell,
+      (x, y, totalColumns, totalRows) =>
+        isLastRow(y, totalRows)
+          ? firstCellOfPreviousColumn(x)
+          : cellBelow(x, y),
+    ],
+  },
+  [BOTTOM_RIGHT_CORNER]: {
+    [HORIZONTAL]: [
+      bottomRightCell,
+      isTopLeftCell,
+      (x, y, totalColumns) =>
+        isFirstColumn(x)
+          ? lastCellOfRowAbove(y, totalColumns)
+          : cellToLeft(x, y),
+    ],
+    [VERTICAL]: [
+      bottomRightCell,
+      isTopLeftCell,
+      (x, y, totalColumns, totalRows) =>
+        isFirstRow(y)
+          ? lastCellOfPreviousColumn(x, totalRows)
+          : cellAbove(x, y),
+    ],
+  },
+  [BOTTOM_LEFT_CORNER]: {
+    [HORIZONTAL]: [
+      bottomLeftCell,
+      isTopRightCell,
+      (x, y, totalColumns) =>
+        isLastColumn(x, totalColumns)
+          ? firstCellOfRowAbove(y)
+          : cellToRight(x, y),
+    ],
+    [VERTICAL]: [
+      bottomLeftCell,
+      isTopRightCell,
+      (x, y, totalColumns, totalRows) =>
+        isFirstRow(y) ? lastCellOfNextColumn(x, totalRows) : cellAbove(x, y),
+    ],
+  },
+};
 
 // -----------------------------------------------------------------------------
 // Create
@@ -344,79 +514,14 @@ const createLinearStrategy = (getStartingCell, isEndingCell, getNextCell) => (
 };
 
 // -----------------------------------------------------------------------------
-// Linear Strategies
-// -----------------------------------------------------------------------------
-
-/**
- * The linearHorizontalForwardStrategy moves through cells from left to right,
- * starting with the top-left cell. When it reaches the last cell in a row, it
- * moves to the first cell of the next row, and so on until there are no more
- * rows.
- */
-const linearHorizontalForwardStrategy = createLinearStrategy(
-  firstCell,
-  isLastCell,
-  // eslint-disable-next-line no-unused-vars
-  (x, y, totalColumns, totalRows) =>
-    isLastColumn(x, totalColumns) ? firstCellOfRowBelow(y) : cellToRight(x, y)
-);
-
-/**
- * The linearHorizontalBackwardStrategy moves through cells from right to left,
- * starting with the bottom-right cell. When it reaches the first cell in a row,
- * it moves to the last cell of the previous row, and so on until there are no
- * more rows.
- */
-const linearHorizontalBackwardStrategy = createLinearStrategy(
-  lastCell,
-  isFirstCell,
-  // eslint-disable-next-line no-unused-vars
-  (x, y, totalColumns, totalRows) =>
-    isFirstColumn(x) ? lastCellOfRowAbove(y, totalColumns) : cellToLeft(x, y)
-);
-
-/**
- * The linearVerticalForwardStrategy moves through cells from top to bottom,
- * starting with the top-left cell. When it reaches the last cell in a column,
- * it moves to the first cell of the next column, and so on until there are no
- * more columns.
- */
-const linearVerticalForwardStrategy = createLinearStrategy(
-  firstCell,
-  isLastCell,
-  (x, y, totalColumns, totalRows) =>
-    isLastRow(y, totalRows) ? firstCellOfNextColumn(x) : cellBelow(x, y)
-);
-
-/**
- * The linearVerticalBackwardStrategy moves through cells from bottom to top,
- * starting with the bottom-right cell. When it reaches the first cell in a
- * column, it moves to the last cell of the next column, and so on until there
- * are no more columns.
- */
-const linearVerticalBackwardStrategy = createLinearStrategy(
-  lastCell,
-  isFirstCell,
-  (x, y, totalColumns, totalRows) =>
-    isFirstRow(y) ? lastCellOfPreviousColumn(x, totalRows) : cellAbove(x, y)
-);
-
-// -----------------------------------------------------------------------------
 // Iterators
 // -----------------------------------------------------------------------------
 
-export const linearHorizontalForwardIterator = curry(createIterator)(
-  linearHorizontalForwardStrategy
-);
+export const linearIterator = (startingCorner, direction) => {
+  const [startingCell, isFinalCell, func] = startingCellFuncMap[startingCorner][
+    direction
+  ];
+  const strategy = createLinearStrategy(startingCell, isFinalCell, func);
 
-export const linearHorizontalBackwardIterator = curry(createIterator)(
-  linearHorizontalBackwardStrategy
-);
-
-export const linearVerticalForwardIterator = curry(createIterator)(
-  linearVerticalForwardStrategy
-);
-
-export const linearVerticalBackwardIterator = curry(createIterator)(
-  linearVerticalBackwardStrategy
-);
+  return curry(createIterator)(strategy);
+};
