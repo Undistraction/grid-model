@@ -1,22 +1,4 @@
-/**
- * Increment the supplied index by one.
- * 
- * @param {number} index The index to be incremented.
- * 
- * @return {number} The incremented index.
- * @private
- */
-const incrementIndex = index => index + 1;
-
-/**
- * Decrement the supplied index by one.
- * 
- * @param {number} index The index to be decremented.
- * 
- * @return {number} The decremented index.
- * @private
- */
-const decrementIndex = index => index - 1;
+import { increment, decrement } from '../math';
 
 /**
  * {number} The index of the first column in the grid. This will always be zero
@@ -82,7 +64,7 @@ const lastCell = (totalColumns, totalRows) => [
  * @private
  */
 const cellToRight = (columnIndex, rowIndex) => [
-  incrementIndex(columnIndex),
+  increment(columnIndex),
   rowIndex,
 ];
 
@@ -96,7 +78,7 @@ const cellToRight = (columnIndex, rowIndex) => [
  * @private
  */
 const cellToLeft = (columnIndex, rowIndex) => [
-  decrementIndex(columnIndex),
+  decrement(columnIndex),
   rowIndex,
 ];
 
@@ -109,10 +91,7 @@ const cellToLeft = (columnIndex, rowIndex) => [
  * @returns {array} The indexes of cell below.
  * @private
  */
-const cellBelow = (columnIndex, rowIndex) => [
-  columnIndex,
-  incrementIndex(rowIndex),
-];
+const cellBelow = (columnIndex, rowIndex) => [columnIndex, increment(rowIndex)];
 
 /**
  * Get the indexes of cell above the one with the supplied indexes.
@@ -123,10 +102,7 @@ const cellBelow = (columnIndex, rowIndex) => [
  * @returns {array} The indexes of cell above.
  * @private
  */
-const cellAbove = (columnIndex, rowIndex) => [
-  columnIndex,
-  decrementIndex(rowIndex),
-];
+const cellAbove = (columnIndex, rowIndex) => [columnIndex, decrement(rowIndex)];
 
 /**
  * Get the indexes of first cell in the next column to the one with the supplied
@@ -139,7 +115,7 @@ const cellAbove = (columnIndex, rowIndex) => [
  * @private
  */
 const firstCellOfNextColumn = columnIndex => [
-  incrementIndex(columnIndex),
+  increment(columnIndex),
   firstRow(),
 ];
 
@@ -155,7 +131,7 @@ const firstCellOfNextColumn = columnIndex => [
  */
 // eslint-disable-next-line no-unused-vars
 const firstCellOfPreviousColumn = columnIndex => [
-  decrementIndex(columnIndex),
+  decrement(columnIndex),
   firstRow(),
 ];
 
@@ -171,7 +147,7 @@ const firstCellOfPreviousColumn = columnIndex => [
  */
 // eslint-disable-next-line no-unused-vars
 const lastCellOfNextColumn = (columnIndex, totalRows) => [
-  incrementIndex(columnIndex),
+  increment(columnIndex),
   lastRow(totalRows),
 ];
 
@@ -187,7 +163,7 @@ const lastCellOfNextColumn = (columnIndex, totalRows) => [
  * @private
  */
 const lastCellOfPreviousColumn = (columnIndex, totalRows) => [
-  decrementIndex(columnIndex),
+  decrement(columnIndex),
   lastRow(totalRows),
 ];
 
@@ -201,10 +177,7 @@ const lastCellOfPreviousColumn = (columnIndex, totalRows) => [
  * supplied index.
  * @private
  */
-const firstCellOfRowBelow = rowIndex => [
-  firstColumn(),
-  incrementIndex(rowIndex),
-];
+const firstCellOfRowBelow = rowIndex => [firstColumn(), increment(rowIndex)];
 
 /**
  * Get the indexes of first cell in the row above the row with the supplied
@@ -217,10 +190,7 @@ const firstCellOfRowBelow = rowIndex => [
  * @private
  */
 // eslint-disable-next-line no-unused-vars
-const firstCellOfRowAbove = rowIndex => [
-  firstColumn(),
-  decrementIndex(rowIndex),
-];
+const firstCellOfRowAbove = rowIndex => [firstColumn(), decrement(rowIndex)];
 
 /**
  * Get the indexes of last cell in the row below the row with the supplied
@@ -236,7 +206,7 @@ const firstCellOfRowAbove = rowIndex => [
 // eslint-disable-next-line no-unused-vars
 const lastCellOfRowBelow = (rowIndex, totalColumns) => [
   lastColumn(totalColumns),
-  incrementIndex(rowIndex),
+  increment(rowIndex),
 ];
 
 /**
@@ -252,7 +222,7 @@ const lastCellOfRowBelow = (rowIndex, totalColumns) => [
  */
 const lastCellOfRowAbove = (rowIndex, totalColumns) => [
   lastColumn(totalColumns),
-  decrementIndex(rowIndex),
+  decrement(rowIndex),
 ];
 
 /**
