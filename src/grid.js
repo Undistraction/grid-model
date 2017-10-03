@@ -9,6 +9,7 @@ import createPoint from './point';
 import createIterator from './iterator';
 import { throwError } from './errors';
 import { print, printDivider } from './logging';
+import { keepGreatest, keepSmallest } from './math';
 
 // -----------------------------------------------------------------------------
 // Error Messages
@@ -72,16 +73,16 @@ const defaultStrategy = () => linearHorizontalForwardStrategy;
 const regionForCells = cells => {
   const tlX = cells
     .map(cell => cell.topLeftPoint.x)
-    .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+    .reduce(keepSmallest, Infinity);
   const tlY = cells
     .map(cell => cell.topLeftPoint.y)
-    .reduce((acc, cur) => (cur < acc ? cur : acc), Infinity);
+    .reduce(keepSmallest, Infinity);
   const brX = cells
     .map(cell => cell.bottomRightPoint.x)
-    .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+    .reduce(keepGreatest, 0);
   const brY = cells
     .map(cell => cell.bottomRightPoint.y)
-    .reduce((acc, cur) => (cur > acc ? cur : acc), 0);
+    .reduce(keepGreatest, 0);
 
   const regionTopLeftPoint = createPoint(tlX, tlY);
   const regionDimensions = createDimensions({
@@ -389,21 +390,21 @@ const saveMatrixDimensions = (
   cellWidth,
   cellHeight
 ) => {
-  const c = isNumber(columns)
+  const resolvedColumns = isNumber(columns)
     ? columns
     : canDeriveColumns(dimensions.width, cellWidth) &&
       deriveColumns(dimensions.width, cellWidth);
-  const r = isNumber(rows)
+  const resolvedRows = isNumber(rows)
     ? rows
     : canDeriveRows(dimensions.height, cellHeight) &&
       deriveRows(dimensions.height, cellHeight);
 
-  if (!r || !c) {
+  if (!resolvedColumns || !resolvedRows) {
     throwError(INVALID_PARAMS_MESSAGE);
   }
 
-  const rowParts = r.toString().split('.');
-  const columnParts = c.toString().split('.');
+  const rowParts = resolvedRows.toString().split('.');
+  const columnParts = resolvedColumns.toString().split('.');
 
   const wholeRows = Number(rowParts[0]);
   const wholeColumns = Number(columnParts[0]);

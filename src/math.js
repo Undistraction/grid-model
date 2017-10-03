@@ -1,4 +1,4 @@
-import { add, subtract, curry, curryRight } from 'lodash';
+import { add, subtract, curry, curryRight, gt, lt } from 'lodash';
 
 /**
  * Increment the supplied value by one.
@@ -19,3 +19,24 @@ export const increment = curry(add)(1);
  * @private
  */
 export const decrement = curryRight(subtract)(1);
+
+/**
+ * Return the largest of the two supplied values.
+ * 
+ * @param {number} x The first value to compare.
+ * @param {number} y The second value to compare.
+ * 
+ * @returns {number} The greatest value.
+ */
+export const keepGreatest = (x, y) => (gt(y, x) ? y : x);
+
+/**
+ * Return the smallest of the two supplied values.
+ * 
+ * @param {number} x The first value to compare.
+ * @param {number} y The second value to compare.
+ * 
+ * 
+ * @returns {number} The greatest value.
+ */
+export const keepSmallest = (x, y) => (lt(y, x) ? y : x);

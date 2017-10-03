@@ -1,4 +1,4 @@
-import { increment, decrement } from '../math';
+import { increment, decrement, keepGreatest, keepSmallest } from '../math';
 
 describe('math', () => {
   describe('increment', () => {
@@ -16,6 +16,22 @@ describe('math', () => {
       expect(decrement(1)).toEqual(0);
       expect(decrement(10)).toEqual(9);
       expect(decrement(-1)).toEqual(-2);
+    });
+  });
+
+  describe('keepGreatest', () => {
+    it('returns the greater value', () => {
+      expect(keepGreatest(0, 10)).toEqual(10);
+      expect(keepGreatest(10, 0)).toEqual(10);
+      expect(keepGreatest(-2, -12)).toEqual(-2);
+    });
+  });
+
+  describe('keepSmallest', () => {
+    it('returns the smaller value', () => {
+      expect(keepSmallest(0, 10)).toEqual(0);
+      expect(keepSmallest(10, 0)).toEqual(0);
+      expect(keepSmallest(-2, 2)).toEqual(-2);
     });
   });
 });
