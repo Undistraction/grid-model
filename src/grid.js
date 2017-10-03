@@ -8,6 +8,7 @@ import createRegion from './region';
 import createPoint from './point';
 import createIterator from './iterator';
 import { throwError } from './errors';
+import { print, printDivider } from './logging';
 
 // -----------------------------------------------------------------------------
 // Error Messages
@@ -31,15 +32,10 @@ export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 // Logging
 // -----------------------------------------------------------------------------
 
-const print = message => {
-  // eslint-disable-next-line no-console
-  console.info(message);
-};
-
 const printInfo = grid => {
-  print('-----------------------------------------------------------');
+  printDivider();
   print('Grid');
-  print('-----------------------------------------------------------');
+  printDivider();
   print(`Width:              ${grid.width}`);
   print(`Height:             ${grid.height}`);
   print(`Aspect Ratio:       ${grid.aspectRatio}`);
@@ -50,7 +46,7 @@ const printInfo = grid => {
   print(`Gutter Width:       ${grid.gutterWidth}`);
   print(`Gutter Height:      ${grid.gutterHeight}`);
   print(`Total cells:        ${grid.matrixDimensions.area()}`);
-  print('-----------------------------------------------------------');
+  printDivider();
 };
 
 // -----------------------------------------------------------------------------
