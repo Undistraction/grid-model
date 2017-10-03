@@ -667,10 +667,25 @@ const createGrid = (
   };
 
   /**
+   * Get the region encompassing the column at the supplied index.
+   * 
+   * @param {number} startIndex The index of the  column.
+   *  
+   * @returns {object} A region object ecompassing the column at the supplied
+   * index.
+   */
+  const regionForColumn = startIndex => {
+    const startCell = regionForCellAt(startIndex, 0);
+    const endCell = regionForCellAt(startIndex, matrixDimensions.height - 1);
+
+    return regionForCells([startCell, endCell]);
+  };
+
+  /**
    * Get the region encompassing one or more consecutive columns.
    * 
    * @param {number} startIndex The index of the first column.
-   * @param {any} endIndex The index of the last column.
+   * @param {number} endIndex The index of the last column.
    *  
    * @returns {object} A region object ecompassing all columns between the
    * supplied indexes.
@@ -678,10 +693,23 @@ const createGrid = (
   const regionForColumns = (startIndex, endIndex) => {
     const startCell = regionForCellAt(startIndex, 0);
 
-    const endCell = regionForCellAt(
-      !isNil(endIndex) ? endIndex : startIndex,
-      matrixDimensions.height - 1
-    );
+    const endCell = regionForCellAt(endIndex, matrixDimensions.height - 1);
+
+    return regionForCells([startCell, endCell]);
+  };
+
+  /**
+   * Get the region encompassing the row at the supplied index.
+   * 
+   * @param {number} startIndex The index of the row.
+   *  
+   * @returns {object} A region object ecompassing the row at the supplied
+   * index.
+   */
+  const regionForRow = startIndex => {
+    const startCell = regionForCellAt(0, startIndex);
+
+    const endCell = regionForCellAt(matrixDimensions.width - 1, startIndex);
 
     return regionForCells([startCell, endCell]);
   };
@@ -690,18 +718,14 @@ const createGrid = (
    * Get the region encompassing one or more consecutive rows.
    * 
    * @param {number} startIndex The index of the first row.
-   * @param {any} endIndex The index of the last row.
+   * @param {number} endIndex The index of the last row.
    *  
    * @returns {object} A region object ecompassing all rows between the
    * supplied indexes.
    */
   const regionForRows = (startIndex, endIndex) => {
     const startCell = regionForCellAt(0, startIndex);
-
-    const endCell = regionForCellAt(
-      matrixDimensions.width - 1,
-      !isNil(endIndex) ? endIndex : startIndex
-    );
+    const endCell = regionForCellAt(matrixDimensions.width - 1, endIndex);
 
     return regionForCells([startCell, endCell]);
   };
@@ -753,7 +777,9 @@ const createGrid = (
      */
     cellCount: matrixDimensions.area,
     regionForCellAt,
+    regionForColumn,
     regionForColumns,
+    regionForRow,
     regionForRows,
     regionForCellsAt,
     // Note: Don't use an arrow function as we want it to bind to this object.
