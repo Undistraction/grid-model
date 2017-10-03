@@ -1,6 +1,6 @@
 /** @module Grid */
 
-import { isNumber, isNil } from 'lodash';
+import { isNumber, isNil, partial } from 'lodash';
 import { isPositiveInteger } from './validations';
 import createDimensions from './dimensions';
 import createRegion from './region';
@@ -31,20 +31,25 @@ export const INVALID_ROW_INDEX_MESSAGE = 'The row index supplied was invalid';
 // Logging
 // -----------------------------------------------------------------------------
 
-const printInfo = grid => {
+const printInfo = (
+  dimensions,
+  matrixDimensions,
+  cellDimensions,
+  gutterDimensions
+) => {
   printDivider();
   print('Grid');
   printDivider();
-  print(`Width:              ${grid.width}`);
-  print(`Height:             ${grid.height}`);
-  print(`Aspect Ratio:       ${grid.aspectRatio}`);
-  print(`Columns:            ${grid.columns}`);
-  print(`Rows:               ${grid.rows}`);
-  print(`Cell Width:         ${grid.cellWidth}`);
-  print(`Cell Height:        ${grid.cellHeight}`);
-  print(`Gutter Width:       ${grid.gutterWidth}`);
-  print(`Gutter Height:      ${grid.gutterHeight}`);
-  print(`Total cells:        ${grid.matrixDimensions.area()}`);
+  print(`Width:              ${dimensions.width}`);
+  print(`Height:             ${dimensions.height}`);
+  print(`Aspect Ratio:       ${dimensions.aspectRatio}`);
+  print(`Columns:            ${matrixDimensions.columns}`);
+  print(`Rows:               ${matrixDimensions.rows}`);
+  print(`Cell Width:         ${cellDimensions.cellWidth}`);
+  print(`Cell Height:        ${cellDimensions.cellHeight}`);
+  print(`Gutter Width:       ${gutterDimensions.gutterWidth}`);
+  print(`Gutter Height:      ${gutterDimensions.gutterHeight}`);
+  print(`Total cells:        ${matrixDimensions.area()}`);
   printDivider();
 };
 
@@ -733,9 +738,13 @@ const createGrid = (
      * 
      * @returns {undefined}
      */
-    info() {
-      printInfo(this);
-    },
+    info: partial(
+      printInfo,
+      dimensions,
+      matrixDimensions,
+      cellDimensions,
+      gutterDimensions
+    ),
 
     /**
      * Get the number of cells in the grid (columns * rows)

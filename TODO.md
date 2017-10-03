@@ -1,13 +1,14 @@
+
+
+- Fix JS Doc grouping
+- Add errors to docs.
+- Add outstanding linear strategies.
+- Add different iterator strategies - random, snake
+- Add nested grid - assign a grid to cells
+- Visualise grid
+- Clean up examples
+- Grid Math
+- Proper aspect ratios
 - Add region comparison
 - Add point comparison
 - Add dimensions comparison
-
-- Add customiszable iterator - reverse, random, snake, stripe
-- Add nested grid - assign a grid to cells
-- JS Doc
-- Visualise grid
-- Clean up examples
-- Create illustrations for examaple
-- Grid Math
-- Proper aspect ratios
-- Grid 'Info' printout
