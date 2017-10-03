@@ -15,5 +15,16 @@ export default {
       exclude: 'node_modules/**', // only transpile project source
     }),
   ],
-  external: ['lodash/isNil', 'lodash/isNumber', 'lodash/isInteger'],
+  external: [
+    'lodash/isNil',
+    'lodash/isNumber',
+    'lodash/isInteger',
+    'lodash/partial',
+    'lodash/curry',
+    'lodash/curryRight',
+    'lodash/add',
+    'lodash/subtract',
+    'lodash/gt',
+    'lodash/lt',
+  ],
 };
